@@ -3,7 +3,7 @@
 A cross-platform mobile app that helps DIY solar panel installers achieve optimal panel alignment using device sensors, intuitive visual feedback, and haptic guidance.
 
 <p align="center">
-  <img src="docs/assets/app-preview.png" alt="TiltSync Preview" width="300" />
+  <img src="social.png" alt="TiltSync Preview" width="300" />
 </p>
 
 ## Features
