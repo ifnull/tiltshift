@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TiltSync — Solar Panel Alignment Tool</title>
+  <meta name="description" content="Align like a pro. The easiest way to align solar panels — perfect for DIYers and beginners. No experience required.">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://tiltsync.altmake.com/">
+  <meta property="og:title" content="TiltSync — Solar Panel Alignment Tool">
+  <meta property="og:description" content="Align like a pro. The easiest way to align solar panels — perfect for DIYers and beginners. No experience required.">
+  <meta property="og:image" content="https://tiltsync.altmake.com/og-image.png">
+  
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://tiltsync.altmake.com/">
+  <meta name="twitter:title" content="TiltSync — Solar Panel Alignment Tool">
+  <meta name="twitter:description" content="Align like a pro. The easiest way to align solar panels — perfect for DIYers and beginners. No experience required.">
+  <meta name="twitter:image" content="https://tiltsync.altmake.com/og-image.png">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%230d0d0d' width='100' height='100' rx='20'/><rect fill='%230077cc' x='15' y='15' width='70' height='35'/><rect fill='%23553311' x='15' y='50' width='70' height='35'/><line x1='15' y1='50' x2='85' y2='50' stroke='%23fff' stroke-width='2'/><circle cx='50' cy='50' r='6' fill='%23ffaa00'/></svg>">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --panel: #0d0d0d;
+      --panel-light: #1a1a1a;
+      --bezel: #2d2d2d;
+      --border: #2a2a2a;
+      --text: #ffffff;
+      --text-dim: #888888;
+      --green: #00ff66;
+      --amber: #ffaa00;
+      --red: #ff3333;
+      --sky: #0077cc;
+      --ground: #553311;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      background: var(--panel);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    
+    /* Scanline overlay for cockpit feel */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.03) 2px,
+        rgba(0,0,0,0.03) 4px
+      );
+      pointer-events: none;
+      z-index: 1000;
+    }
+    
+    /* Header */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 1rem 2rem;
+      background: linear-gradient(to bottom, var(--panel), transparent);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: var(--text);
+    }
+    
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: var(--panel-light);
+      border: 2px solid var(--bezel);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    
+    .logo-icon .horizon {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+    
+    .logo-icon .sky {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 50%;
+      background: var(--sky);
+    }
+    
+    .logo-icon .ground {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 50%;
+      background: var(--ground);
+    }
+    
+    .logo-icon .sun {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 10px;
+      height: 10px;
+      background: var(--amber);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--amber);
+    }
+    
+    .logo-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: 2px;
+      color: var(--amber);
+    }
+    
+    .nav-link {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+    
+    .nav-link:hover {
+      color: var(--green);
+      border-color: var(--green);
+    }
+    
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 6rem 2rem 4rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    /* Animated compass background */
+    .hero::before {
+      content: '';
+      position: absolute;
+      width: 800px;
+      height: 800px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      opacity: 0.3;
+      animation: rotate 120s linear infinite;
+    }
+    
+    .hero::after {
+      content: '';
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border: 1px dashed var(--border);
+      border-radius: 50%;
+      opacity: 0.2;
+      animation: rotate 90s linear infinite reverse;
+    }
+    
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 700px;
+    }
+    
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--green);
+      background: rgba(0, 255, 102, 0.1);
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      border: 1px solid rgba(0, 255, 102, 0.3);
+      margin-bottom: 2rem;
+      letter-spacing: 1px;
+    }
+    
+    .status-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    
+    h1 {
+      font-size: clamp(2.5rem, 8vw, 4.5rem);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+    }
+    
+    h1 .highlight {
+      color: var(--amber);
+    }
+    
+    .tagline {
+      font-size: 1.25rem;
+      color: var(--text-dim);
+      margin-bottom: 3rem;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .cta-group {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s;
+      border: 2px solid transparent;
+    }
+    
+    .btn-primary {
+      background: var(--amber);
+      color: var(--panel);
+    }
+    
+    .btn-primary:hover {
+      background: #e69900;
+      transform: translateY(-2px);
+    }
+    
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border-color: var(--bezel);
+    }
+    
+    .btn-secondary:hover {
+      border-color: var(--text-dim);
+    }
+    
+    /* Instrument Display */
+    .instrument-preview {
+      margin-top: 4rem;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .instrument {
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      background: var(--panel-light);
+      border: 4px solid var(--bezel);
+      margin: 0 auto;
+      position: relative;
+      box-shadow: 
+        0 0 0 1px var(--border),
+        inset 0 0 60px rgba(0,0,0,0.5);
+    }
+    
+    .compass-card {
+      position: absolute;
+      inset: 12px;
+      border-radius: 50%;
+      background: var(--panel);
+      animation: compass-drift 20s ease-in-out infinite;
+    }
+    
+    @keyframes compass-drift {
+      0%, 100% { transform: rotate(-5deg); }
+      50% { transform: rotate(5deg); }
+    }
+    
+    .compass-tick {
+      position: absolute;
+      width: 2px;
+      height: 12px;
+      background: var(--text-dim);
+      top: 8px;
+      left: 50%;
+      transform-origin: center 118px;
+    }
+    
+    .compass-tick.major {
+      height: 18px;
+      background: var(--text);
+    }
+    
+    .compass-label {
+      position: absolute;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      top: 32px;
+      left: 50%;
+      transform-origin: center 96px;
+    }
+    
+    .compass-label.n { color: var(--amber); }
+    
+    .sun-marker {
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      background: rgba(255, 170, 0, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      bottom: 44px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    
+    .attitude-indicator {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      overflow: hidden;
+      border: 3px solid var(--bezel);
+    }
+    
+    .attitude-sky {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 50%;
+      background: var(--sky);
+    }
+    
+    .attitude-ground {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 50%;
+      background: var(--ground);
+    }
+    
+    .attitude-horizon {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: #fff;
+      transform: translateY(-50%);
+    }
+    
+    .attitude-aircraft {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      align-items: center;
+    }
+    
+    .wing {
+      width: 20px;
+      height: 3px;
+      background: var(--amber);
+      border-radius: 2px;
+    }
+    
+    .fuselage {
+      width: 8px;
+      height: 8px;
+      background: var(--amber);
+      border-radius: 50%;
+      margin: 0 2px;
+    }
+    
+    .lubber-line {
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-bottom: 14px solid var(--green);
+    }
+    
+    .hdg-readout {
+      position: absolute;
+      top: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(13, 13, 13, 0.9);
+      padding: 4px 12px;
+      border-radius: 4px;
+      border: 1px solid var(--bezel);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--green);
+    }
+    
+    .status-display {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      text-align: right;
+    }
+    
+    .status-pct {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--green);
+    }
+    
+    .status-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 1px;
+      color: var(--green);
+    }
+    
+    /* Features Section */
+    .features {
+      padding: 6rem 2rem;
+      background: var(--panel-light);
+    }
+    
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    
+    .section-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+    
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--amber);
+      letter-spacing: 3px;
+      margin-bottom: 1rem;
+    }
+    
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+    
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+    
+    .feature-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      transition: all 0.3s;
+    }
+    
+    .feature-card:hover {
+      border-color: var(--amber);
+      transform: translateY(-4px);
+    }
+    
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(255, 170, 0, 0.1);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 1.5rem;
+    }
+    
+    .feature-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+    
+    .feature-desc {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+    }
+    
+    /* Modes Section */
+    .modes {
+      padding: 6rem 2rem;
+    }
+    
+    .modes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+    
+    @media (max-width: 768px) {
+      .modes-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .mode-card {
+      background: var(--panel-light);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+    }
+    
+    .mode-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--amber);
+      letter-spacing: 2px;
+      margin-bottom: 1rem;
+    }
+    
+    .mode-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+    
+    .mode-desc {
+      color: var(--text-dim);
+      font-size: 0.9rem;
+    }
+    
+    .mode-formula {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--green);
+      background: var(--panel);
+      padding: 0.75rem 1rem;
+      border-radius: 6px;
+      margin-top: 1.5rem;
+    }
+    
+    /* CTA Section */
+    .cta-section {
+      padding: 6rem 2rem;
+      background: linear-gradient(to bottom, var(--panel-light), var(--panel));
+      text-align: center;
+    }
+    
+    .cta-section h2 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .cta-section p {
+      color: var(--text-dim);
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+    }
+    
+    /* Footer */
+    footer {
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+    
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    
+    .footer-links a {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    
+    .footer-links a:hover {
+      color: var(--amber);
+    }
+    
+    .copyright {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+    }
+    
+    /* Responsive */
+    @media (max-width: 640px) {
+      header {
+        padding: 1rem;
+      }
+      
+      .hero {
+        padding: 5rem 1.5rem 3rem;
+      }
+      
+      .instrument {
+        width: 240px;
+        height: 240px;
+      }
+      
+      .compass-tick {
+        transform-origin: center 100px;
+      }
+      
+      .compass-label {
+        transform-origin: center 80px;
+      }
+      
+      .features, .modes, .cta-section {
+        padding: 4rem 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="/" class="logo">
+      <div class="logo-icon">
+        <div class="horizon">
+          <div class="sky"></div>
+          <div class="ground"></div>
+          <div class="sun"></div>
+        </div>
+      </div>
+      <span class="logo-text">TILTSYNC</span>
+    </a>
+    <a href="#features" class="nav-link">Features</a>
+  </header>
+
+  <section class="hero">
+    <div class="hero-content">
+      <div class="status-badge">AVAILABLE FOR IOS</div>
+      <h1>Align like a <span class="highlight">pro</span></h1>
+      <p class="tagline">The easiest way to align solar panels. Perfect for DIYers and beginners — no experience required.</p>
+      <div class="cta-group">
+        <a href="#" class="btn btn-primary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+          App Store
+        </a>
+        <a href="#modes" class="btn btn-secondary">How it works</a>
+      </div>
+    </div>
+    
+    <div class="instrument-preview">
+      <div class="instrument">
+        <div class="compass-card">
+          <!-- Ticks -->
+          <div class="compass-tick major" style="transform: translateX(-50%) rotate(0deg)"></div>
+          <div class="compass-tick" style="transform: translateX(-50%) rotate(30deg)"></div>
+          <div class="compass-tick" style="transform: translateX(-50%) rotate(60deg)"></div>
+          <div class="compass-tick major" style="transform: translateX(-50%) rotate(90deg)"></div>
+          <div class="compass-tick" style="transform: translateX(-50%) rotate(120deg)"></div>
+          <div class="compass-tick" style="transform: translateX(-50%) rotate(150deg)"></div>
+          <div class="compass-tick major" style="transform: translateX(-50%) rotate(180deg)"></div>
+          <div class="compass-tick" style="transform: translateX(-50%) rotate(210deg)"></div>
+          <div class="compass-tick" style="transform: translateX(-50%) rotate(240deg)"></div>
+          <div class="compass-tick major" style="transform: translateX(-50%) rotate(270deg)"></div>
+          <div class="compass-tick" style="transform: translateX(-50%) rotate(300deg)"></div>
+          <div class="compass-tick" style="transform: translateX(-50%) rotate(330deg)"></div>
+          
+          <!-- Labels -->
+          <div class="compass-label n" style="transform: translateX(-50%) rotate(0deg)">N</div>
+          <div class="compass-label" style="transform: translateX(-50%) rotate(90deg)">E</div>
+          <div class="compass-label" style="transform: translateX(-50%) rotate(180deg)">S</div>
+          <div class="compass-label" style="transform: translateX(-50%) rotate(270deg)">W</div>
+          
+          <!-- Sun marker -->
+          <div class="sun-marker">☀</div>
+        </div>
+        
+        <!-- Attitude indicator -->
+        <div class="attitude-indicator">
+          <div class="attitude-sky"></div>
+          <div class="attitude-ground"></div>
+          <div class="attitude-horizon"></div>
+          <div class="attitude-aircraft">
+            <div class="wing"></div>
+            <div class="fuselage"></div>
+            <div class="wing"></div>
+          </div>
+        </div>
+        
+        <!-- Lubber line -->
+        <div class="lubber-line"></div>
+        
+        <!-- Heading readout -->
+        <div class="hdg-readout">180°</div>
+        
+        <!-- Status -->
+        <div class="status-display">
+          <div class="status-pct">100%</div>
+          <div class="status-label">ALIGNED</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="features" id="features">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-label">FEATURES</div>
+        <h2 class="section-title">Precision tools, pocket-sized</h2>
+      </div>
+      
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🎯</div>
+          <h3 class="feature-title">Precision interface</h3>
+          <p class="feature-desc">Intuitive display with rotating compass, tilt indicator, and real-time digital readouts. Not just functional — beautiful to use.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">📳</div>
+          <h3 class="feature-title">Haptic guidance</h3>
+          <p class="feature-desc">Progressive vibration feedback intensifies as you approach perfect alignment. Feel your way to the target without watching the screen.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">🎯</div>
+          <h3 class="feature-title">Dual alignment</h3>
+          <p class="feature-desc">Align both tilt angle and compass direction in one view. Or use dedicated modes for tilt-only and compass-only alignment.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">📍</div>
+          <h3 class="feature-title">GPS-powered</h3>
+          <p class="feature-desc">Automatically calculates optimal angles based on your exact latitude. Cached location means instant startup on return visits.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">🌓</div>
+          <h3 class="feature-title">Dark & light themes</h3>
+          <p class="feature-desc">Dark mode for indoor prep, light mode for outdoor visibility. Auto mode follows your system preference.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">📴</div>
+          <h3 class="feature-title">Works offline</h3>
+          <p class="feature-desc">All calculations happen on-device. No account required, no data collected. Just open and align.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="modes" id="modes">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-label">OPTIMIZATION MODES</div>
+        <h2 class="section-title">Three modes for every situation</h2>
+      </div>
+      
+      <div class="modes-grid">
+        <div class="mode-card">
+          <div class="mode-name">YEAR-ROUND</div>
+          <h3 class="mode-title">Set & forget</h3>
+          <p class="mode-desc">Best fixed angle for maximum annual energy production. Ideal for permanent rooftop installations.</p>
+          <div class="mode-formula">tilt = latitude</div>
+        </div>
+        
+        <div class="mode-card">
+          <div class="mode-name">SEASONAL</div>
+          <h3 class="mode-title">Quarterly tune-up</h3>
+          <p class="mode-desc">Optimized angles for summer and winter. For adjustable mounts that can squeeze extra efficiency.</p>
+          <div class="mode-formula">tilt = latitude ± 15°</div>
+        </div>
+        
+        <div class="mode-card">
+          <div class="mode-name">DAILY</div>
+          <h3 class="mode-title">Real-time tracking</h3>
+          <p class="mode-desc">Updates every minute based on current sun position. Perfect for portable panels, camping, and RV setups.</p>
+          <div class="mode-formula">tilt = 90° − altitude</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container">
+      <h2>Stop guessing. Start generating.</h2>
+      <p>Download TiltSync and align your solar panels like a pro.</p>
+      <a href="#" class="btn btn-primary">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+        Download on App Store
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-links">
+      <a href="mailto:cameo-kayak.5j@icloud.com?subject=TiltSync%20Support">Support</a>
+      <a href="/privacy">Privacy Policy</a>
+      <a href="/terms">Terms of Service</a>
+    </div>
+    <p class="copyright">© 2026 TiltSync. Made by <a href="http://ifnull.me/" style="color: var(--amber); text-decoration: none;">ifnull</a>.</p>
+  </footer>
+</body>
+</html>

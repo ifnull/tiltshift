@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Support — TiltSync</title>
+  <meta name="description" content="Get help with TiltSync. FAQs, troubleshooting, and contact information.">
+  
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%230d0d0d' width='100' height='100' rx='20'/><rect fill='%230077cc' x='15' y='15' width='70' height='35'/><rect fill='%23553311' x='15' y='50' width='70' height='35'/><line x1='15' y1='50' x2='85' y2='50' stroke='%23fff' stroke-width='2'/><circle cx='50' cy='50' r='6' fill='%23ffaa00'/></svg>">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --panel: #0d0d0d;
+      --panel-light: #1a1a1a;
+      --bezel: #2d2d2d;
+      --border: #2a2a2a;
+      --text: #ffffff;
+      --text-dim: #888888;
+      --green: #00ff66;
+      --amber: #ffaa00;
+      --red: #ff3333;
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      background: var(--panel);
+      color: var(--text);
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+    
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    
+    header {
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: var(--text);
+    }
+    
+    .logo-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 2px;
+      color: var(--amber);
+    }
+    
+    main {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .intro {
+      font-size: 1.1rem;
+      color: var(--text-dim);
+      margin-bottom: 3rem;
+    }
+    
+    .contact-card {
+      background: var(--panel-light);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 3rem;
+      text-align: center;
+    }
+    
+    .contact-card h2 {
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .contact-card p {
+      color: var(--text-dim);
+      margin-bottom: 1.5rem;
+    }
+    
+    .contact-email {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--amber);
+      text-decoration: none;
+      padding: 0.75rem 1.5rem;
+      border: 2px solid var(--amber);
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+    
+    .contact-email:hover {
+      background: var(--amber);
+      color: var(--panel);
+    }
+    
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: var(--amber);
+    }
+    
+    .faq-section {
+      margin-bottom: 3rem;
+    }
+    
+    .faq-item {
+      background: var(--panel-light);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      overflow: hidden;
+    }
+    
+    .faq-question {
+      padding: 1.25rem 1.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .faq-question::after {
+      content: '+';
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.25rem;
+      color: var(--amber);
+    }
+    
+    .faq-item.open .faq-question::after {
+      content: '−';
+    }
+    
+    .faq-answer {
+      padding: 0 1.5rem 1.25rem;
+      color: var(--text-dim);
+      display: none;
+    }
+    
+    .faq-item.open .faq-answer {
+      display: block;
+    }
+    
+    .faq-answer code {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--panel);
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+    }
+    
+    .troubleshooting {
+      margin-bottom: 3rem;
+    }
+    
+    .troubleshooting-item {
+      background: var(--panel-light);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .troubleshooting-item h3 {
+      font-size: 1rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .troubleshooting-item h3::before {
+      content: '⚠';
+      color: var(--red);
+    }
+    
+    .troubleshooting-item p {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+    }
+    
+    .troubleshooting-item ul {
+      color: var(--text-dim);
+      margin-top: 0.75rem;
+      padding-left: 1.25rem;
+    }
+    
+    .troubleshooting-item li {
+      margin-bottom: 0.5rem;
+    }
+    
+    footer {
+      padding: 2rem;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-dim);
+    }
+    
+    footer a {
+      color: var(--amber);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="/" class="logo">
+      <span class="logo-text">TILTSYNC</span>
+    </a>
+  </header>
+
+  <main>
+    <h1>Support</h1>
+    <p class="intro">Need help with TiltSync? Check out the FAQs below or get in touch.</p>
+    
+    <div class="contact-card">
+      <h2>Contact Us</h2>
+      <p>Can't find what you're looking for? Send us an email and we'll get back to you.</p>
+      <a href="mailto:cameo-kayak.5j@icloud.com?subject=TiltSync%20Support" class="contact-email">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg>
+        cameo-kayak.5j@icloud.com
+      </a>
+    </div>
+    
+    <div class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      
+      <div class="faq-item open">
+        <div class="faq-question">How do I use the app?</div>
+        <div class="faq-answer">
+          <p>1. Open TiltSync and allow location and motion sensor permissions.<br>
+          2. Place your phone flat on your solar panel surface.<br>
+          3. Select your optimization mode (Year-Round, Seasonal, or Daily).<br>
+          4. Adjust your panel until the indicator shows green and you feel the haptic confirmation.<br>
+          5. Switch to Compass mode to align the panel's direction.</p>
+        </div>
+      </div>
+      
+      <div class="faq-item">
+        <div class="faq-question">Which mode should I use?</div>
+        <div class="faq-answer">
+          <p><strong>Year-Round:</strong> Best for permanent installations. Sets a fixed angle optimized for annual production.<br><br>
+          <strong>Seasonal:</strong> For adjustable mounts. Provides summer and winter angles if you're willing to adjust 2-4 times per year.<br><br>
+          <strong>Daily:</strong> For portable panels, camping, or RV setups. Updates every minute based on current sun position.</p>
+        </div>
+      </div>
+      
+      <div class="faq-item">
+        <div class="faq-question">How accurate is TiltSync?</div>
+        <div class="faq-answer">
+          <p>TiltSync's accuracy depends on your device's sensors. Most modern smartphones have accelerometers accurate to within 1-2° and magnetometers accurate to within 3-5°. For best results, ensure your device is calibrated (wave it in a figure-8 pattern before use) and avoid magnetic interference.</p>
+        </div>
+      </div>
+      
+      <div class="faq-item">
+        <div class="faq-question">Does the app work without internet?</div>
+        <div class="faq-answer">
+          <p>Yes! TiltSync works completely offline. GPS location is obtained from your device (not a network lookup), and all calculations happen on-device. The only network access needed is the initial app download.</p>
+        </div>
+      </div>
+      
+      <div class="faq-item">
+        <div class="faq-question">Why does the app need my location?</div>
+        <div class="faq-answer">
+          <p>TiltSync uses your latitude to calculate the optimal panel angle. The sun's path across the sky varies by latitude — a panel in Texas needs a different angle than one in Minnesota. Your location data is never transmitted and stays on your device.</p>
+        </div>
+      </div>
+      
+      <div class="faq-item">
+        <div class="faq-question">What do the colors mean?</div>
+        <div class="faq-answer">
+          <p><span style="color: var(--green)">●</span> <strong>Green:</strong> Optimal alignment (within 2° of target)<br>
+          <span style="color: var(--amber)">●</span> <strong>Amber/Yellow:</strong> Close (within 5° of target)<br>
+          <span style="color: var(--red)">●</span> <strong>Red:</strong> Needs adjustment (more than 5° off target)</p>
+        </div>
+      </div>
+      
+      <div class="faq-item">
+        <div class="faq-question">How does haptic feedback work?</div>
+        <div class="faq-answer">
+          <p>As you approach the target angle, your phone will vibrate with increasing frequency:<br><br>
+          • Far from target: No vibration<br>
+          • Approaching (5-10°): Slow pulse<br>
+          • Close (2-5°): Medium pulse<br>
+          • Very close (&lt;2°): Rapid pulse<br>
+          • Locked on target: Single strong confirmation buzz</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="troubleshooting">
+      <h2>Troubleshooting</h2>
+      
+      <div class="troubleshooting-item">
+        <h3>Compass is erratic or inaccurate</h3>
+        <p>Magnetic interference can affect compass accuracy. Try these steps:</p>
+        <ul>
+          <li>Move away from metal objects, speakers, or electronics</li>
+          <li>Calibrate your compass by waving your phone in a figure-8 pattern</li>
+          <li>Remove any magnetic phone case</li>
+          <li>Restart the app after calibrating</li>
+        </ul>
+      </div>
+      
+      <div class="troubleshooting-item">
+        <h3>Location not updating</h3>
+        <p>If your location appears stuck or inaccurate:</p>
+        <ul>
+          <li>Ensure Location Services are enabled for TiltSync in Settings</li>
+          <li>Move to an area with clear sky view (GPS works best outdoors)</li>
+          <li>Tap the "Refresh" button in the location panel</li>
+          <li>Restart the app if issues persist</li>
+        </ul>
+      </div>
+      
+      <div class="troubleshooting-item">
+        <h3>Sensors unavailable</h3>
+        <p>If you see "Accelerometer not available" or "Compass not available":</p>
+        <ul>
+          <li>Check that motion permissions are granted in Settings</li>
+          <li>Some devices may not have all required sensors</li>
+          <li>Try restarting your device</li>
+        </ul>
+      </div>
+      
+      <div class="troubleshooting-item">
+        <h3>App crashes on startup</h3>
+        <p>If the app won't open:</p>
+        <ul>
+          <li>Force quit the app and reopen</li>
+          <li>Restart your device</li>
+          <li>Ensure you're running the latest version</li>
+          <li>Try reinstalling the app</li>
+        </ul>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <a href="/">← Back to TiltSync</a>
+  </footer>
+
+  <script>
+    document.querySelectorAll('.faq-item').forEach(item => {
+      item.querySelector('.faq-question').addEventListener('click', () => {
+        item.classList.toggle('open');
+      });
+    });
+  </script>
+</body>
+</html>
