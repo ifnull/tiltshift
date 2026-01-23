@@ -10,21 +10,22 @@
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#0d0d0d"
+      "backgroundColor": "#1a5490"
     },
     "ios": {
-      "supportsTablet": true,
+      "supportsTablet": false,
       "bundleIdentifier": "com.altmake.TiltSync",
-      "buildNumber": "1",
+      "buildNumber": "3",
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "TiltSync needs your location to calculate the optimal panel angle for your latitude.",
-        "NSMotionUsageDescription": "TiltSync uses motion sensors to measure your panel's current tilt angle."
+        "NSMotionUsageDescription": "TiltSync uses motion sensors to measure your panel's current tilt angle.",
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#0d0d0d"
+        "backgroundColor": "#1a5490"
       },
       "package": "com.altmake.tiltsync",
       "permissions": [

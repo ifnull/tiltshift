@@ -9,10 +9,10 @@
 /* Begin PBXBuildFile section */
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
-		7F8A5F134D7165F4528E4FCD /* libPods-TiltSync.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F3F19526BBB1EF493BBE63A /* libPods-TiltSync.a */; };
-		B3CD20298B4AF8E28864547F /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = ACBD089A077145C9AB1CA913 /* PrivacyInfo.xcprivacy */; };
+		911D937F936451DE5E6D5BAD /* libPods-TiltSync.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3FA3BCAE8F530140F5E45E7B /* libPods-TiltSync.a */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
-		E32A3499EF0D148E97A33B94 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90DB1ADC7F608CE7A4AD13FA /* ExpoModulesProvider.swift */; };
+		E2800C9688E4391B1CBFDC75 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 961D90A4206A712CD726EF88 /* ExpoModulesProvider.swift */; };
+		E4EA2B419DBAD46FEB9258E4 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 773C0C739E8B79590B88B935 /* PrivacyInfo.xcprivacy */; };
 		F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11748412D0307B40044C1D9 /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
 
@@ -20,12 +20,12 @@
 		13B07F961A680F5B00A75B9A /* TiltSync.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TiltSync.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = TiltSync/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = TiltSync/Info.plist; sourceTree = "<group>"; };
-		2F3F19526BBB1EF493BBE63A /* libPods-TiltSync.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TiltSync.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		60CD4E4FF76078D04B594317 /* Pods-TiltSync.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TiltSync.release.xcconfig"; path = "Target Support Files/Pods-TiltSync/Pods-TiltSync.release.xcconfig"; sourceTree = "<group>"; };
-		77E2140766C80574C7280BD1 /* Pods-TiltSync.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TiltSync.debug.xcconfig"; path = "Target Support Files/Pods-TiltSync/Pods-TiltSync.debug.xcconfig"; sourceTree = "<group>"; };
-		90DB1ADC7F608CE7A4AD13FA /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-TiltSync/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
+		1EA641E3929E9A9F7F0AD602 /* Pods-TiltSync.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TiltSync.debug.xcconfig"; path = "Target Support Files/Pods-TiltSync/Pods-TiltSync.debug.xcconfig"; sourceTree = "<group>"; };
+		212A29A263CF8635EF889B51 /* Pods-TiltSync.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TiltSync.release.xcconfig"; path = "Target Support Files/Pods-TiltSync/Pods-TiltSync.release.xcconfig"; sourceTree = "<group>"; };
+		3FA3BCAE8F530140F5E45E7B /* libPods-TiltSync.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TiltSync.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		773C0C739E8B79590B88B935 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = TiltSync/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		961D90A4206A712CD726EF88 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-TiltSync/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = TiltSync/SplashScreen.storyboard; sourceTree = "<group>"; };
-		ACBD089A077145C9AB1CA913 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = TiltSync/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F11748412D0307B40044C1D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = TiltSync/AppDelegate.swift; sourceTree = "<group>"; };
@@ -37,7 +37,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7F8A5F134D7165F4528E4FCD /* libPods-TiltSync.a in Frameworks */,
+				911D937F936451DE5E6D5BAD /* libPods-TiltSync.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -53,35 +53,18 @@
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
-				ACBD089A077145C9AB1CA913 /* PrivacyInfo.xcprivacy */,
+				773C0C739E8B79590B88B935 /* PrivacyInfo.xcprivacy */,
 			);
 			name = TiltSync;
-			sourceTree = "<group>";
-		};
-		19696BC7B743461141BF5876 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				77E2140766C80574C7280BD1 /* Pods-TiltSync.debug.xcconfig */,
-				60CD4E4FF76078D04B594317 /* Pods-TiltSync.release.xcconfig */,
-			);
-			path = Pods;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				2F3F19526BBB1EF493BBE63A /* libPods-TiltSync.a */,
+				3FA3BCAE8F530140F5E45E7B /* libPods-TiltSync.a */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		59116CE7AE9FAD9D935C7BDC /* TiltSync */ = {
-			isa = PBXGroup;
-			children = (
-				90DB1ADC7F608CE7A4AD13FA /* ExpoModulesProvider.swift */,
-			);
-			name = TiltSync;
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -98,8 +81,8 @@
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
-				19696BC7B743461141BF5876 /* Pods */,
-				F8A07A51FFAD1235F1842DC8 /* ExpoModulesProviders */,
+				FBDD7EF770FD61A20FB8C5F7 /* Pods */,
+				B1D2042464FA16E952D39FB5 /* ExpoModulesProviders */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -114,6 +97,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		B1D2042464FA16E952D39FB5 /* ExpoModulesProviders */ = {
+			isa = PBXGroup;
+			children = (
+				D6F56B49F6AAB0E702D6BC4A /* TiltSync */,
+			);
+			name = ExpoModulesProviders;
+			sourceTree = "<group>";
+		};
 		BB2F792B24A3F905000567C9 /* Supporting */ = {
 			isa = PBXGroup;
 			children = (
@@ -123,12 +114,21 @@
 			path = TiltSync/Supporting;
 			sourceTree = "<group>";
 		};
-		F8A07A51FFAD1235F1842DC8 /* ExpoModulesProviders */ = {
+		D6F56B49F6AAB0E702D6BC4A /* TiltSync */ = {
 			isa = PBXGroup;
 			children = (
-				59116CE7AE9FAD9D935C7BDC /* TiltSync */,
+				961D90A4206A712CD726EF88 /* ExpoModulesProvider.swift */,
 			);
-			name = ExpoModulesProviders;
+			name = TiltSync;
+			sourceTree = "<group>";
+		};
+		FBDD7EF770FD61A20FB8C5F7 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				1EA641E3929E9A9F7F0AD602 /* Pods-TiltSync.debug.xcconfig */,
+				212A29A263CF8635EF889B51 /* Pods-TiltSync.release.xcconfig */,
+			);
+			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -139,13 +139,13 @@
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "TiltSync" */;
 			buildPhases = (
 				08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */,
-				4336B3EBA4E12F699D752BC4 /* [Expo] Configure project */,
+				B0CE26F550678996EFD2BAF5 /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
-				5494A2A471B187D96FF69586 /* [CP] Embed Pods Frameworks */,
+				57DAD0442528157AC94E0814 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -165,7 +165,9 @@
 				LastUpgradeCheck = 1130;
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
+						DevelopmentTeam = S27QQ5M9D5;
 						LastSwiftMigration = 1250;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -195,7 +197,7 @@
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
-				B3CD20298B4AF8E28864547F /* PrivacyInfo.xcprivacy in Resources */,
+				E4EA2B419DBAD46FEB9258E4 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -241,31 +243,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		4336B3EBA4E12F699D752BC4 /* [Expo] Configure project */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/.xcode.env",
-				"$(SRCROOT)/.xcode.env.local",
-				"$(SRCROOT)/TiltSync/TiltSync.entitlements",
-				"$(SRCROOT)/Pods/Target Support Files/Pods-TiltSync/expo-configure-project.sh",
-			);
-			name = "[Expo] Configure project";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(SRCROOT)/Pods/Target Support Files/Pods-TiltSync/ExpoModulesProvider.swift",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-TiltSync/expo-configure-project.sh\"\n";
-		};
-		5494A2A471B187D96FF69586 /* [CP] Embed Pods Frameworks */ = {
+		57DAD0442528157AC94E0814 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -315,6 +293,30 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TiltSync/Pods-TiltSync-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		B0CE26F550678996EFD2BAF5 /* [Expo] Configure project */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/.xcode.env",
+				"$(SRCROOT)/.xcode.env.local",
+				"$(SRCROOT)/TiltSync/TiltSync.entitlements",
+				"$(SRCROOT)/Pods/Target Support Files/Pods-TiltSync/expo-configure-project.sh",
+			);
+			name = "[Expo] Configure project";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(SRCROOT)/Pods/Target Support Files/Pods-TiltSync/ExpoModulesProvider.swift",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-TiltSync/expo-configure-project.sh\"\n";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -323,7 +325,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */,
-				E32A3499EF0D148E97A33B94 /* ExpoModulesProvider.swift in Sources */,
+				E2800C9688E4391B1CBFDC75 /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -332,12 +334,14 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 77E2140766C80574C7280BD1 /* Pods-TiltSync.debug.xcconfig */;
+			baseConfigurationReference = 1EA641E3929E9A9F7F0AD602 /* Pods-TiltSync.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = TiltSync/TiltSync.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = S27QQ5M9D5;
 				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -346,6 +350,7 @@
 				);
 				INFOPLIST_FILE = TiltSync/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = TiltSync;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -374,15 +379,18 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 60CD4E4FF76078D04B594317 /* Pods-TiltSync.release.xcconfig */;
+			baseConfigurationReference = 212A29A263CF8635EF889B51 /* Pods-TiltSync.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = TiltSync/TiltSync.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = S27QQ5M9D5;
 				INFOPLIST_FILE = TiltSync/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = TiltSync;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

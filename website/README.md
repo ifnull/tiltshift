@@ -6,11 +6,18 @@ A lightweight static website for the TiltSync app.
 
 ```
 website/
-├── index.html      # Landing page
-├── privacy.html    # Privacy policy
-├── terms.html      # Terms of service
-├── support.html    # Support & FAQ page
-└── README.md       # This file
+├── index.html             # Landing page
+├── privacy.html           # Privacy policy
+├── terms.html             # Terms of service
+├── support.html           # Support & FAQ page
+├── favicon-32.png         # Favicon (32x32)
+├── apple-touch-icon.png   # iOS home screen icon (180x180)
+├── social.png             # OG image for social sharing (1200x630)
+├── web-screenshot-01.png  # App screenshot: main dashboard (dark)
+├── web-screenshot-02.png  # App screenshot: bubble level (light)
+├── web-screenshot-03.png  # App screenshot: main dashboard (light)
+├── web-screenshot-04.png  # App screenshot: compass mode
+└── README.md              # This file
 ```
 
 ## Deployment

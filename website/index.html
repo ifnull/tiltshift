@@ -11,17 +11,18 @@
   <meta property="og:url" content="https://tiltsync.altmake.com/">
   <meta property="og:title" content="TiltSync — Solar Panel Alignment Tool">
   <meta property="og:description" content="Align like a pro. The easiest way to align solar panels — perfect for DIYers and beginners. No experience required.">
-  <meta property="og:image" content="https://tiltsync.altmake.com/og-image.png">
+  <meta property="og:image" content="https://tiltsync.altmake.com/social.png">
   
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:url" content="https://tiltsync.altmake.com/">
   <meta name="twitter:title" content="TiltSync — Solar Panel Alignment Tool">
   <meta name="twitter:description" content="Align like a pro. The easiest way to align solar panels — perfect for DIYers and beginners. No experience required.">
-  <meta name="twitter:image" content="https://tiltsync.altmake.com/og-image.png">
+  <meta name="twitter:image" content="https://tiltsync.altmake.com/social.png">
   
   <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%230d0d0d' width='100' height='100' rx='20'/><rect fill='%230077cc' x='15' y='15' width='70' height='35'/><rect fill='%23553311' x='15' y='50' width='70' height='35'/><line x1='15' y1='50' x2='85' y2='50' stroke='%23fff' stroke-width='2'/><circle cx='50' cy='50' r='6' fill='%23ffaa00'/></svg>">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -106,52 +107,11 @@
       color: var(--text);
     }
     
-    .logo-icon {
+    .logo-icon-img {
       width: 36px;
       height: 36px;
       border-radius: 8px;
-      background: var(--panel-light);
-      border: 2px solid var(--bezel);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-    
-    .logo-icon .horizon {
-      width: 100%;
-      height: 100%;
-      position: relative;
-    }
-    
-    .logo-icon .sky {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 50%;
-      background: var(--sky);
-    }
-    
-    .logo-icon .ground {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 50%;
-      background: var(--ground);
-    }
-    
-    .logo-icon .sun {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 10px;
-      height: 10px;
-      background: var(--amber);
-      border-radius: 50%;
-      box-shadow: 0 0 8px var(--amber);
+      object-fit: cover;
     }
     
     .logo-text {
@@ -629,6 +589,58 @@
       margin-top: 1.5rem;
     }
     
+    /* Screenshots Section */
+    .screenshots {
+      padding: 6rem 2rem;
+      background: var(--panel-light);
+    }
+    
+    .screenshots-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+    
+    @media (max-width: 900px) {
+      .screenshots-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    @media (max-width: 500px) {
+      .screenshots-grid {
+        grid-template-columns: 1fr;
+        max-width: 280px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+    
+    .screenshot-item {
+      text-align: center;
+    }
+    
+    .screenshot-item img {
+      width: 100%;
+      max-width: 250px;
+      height: auto;
+      border-radius: 24px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      transition: transform 0.3s ease;
+    }
+    
+    .screenshot-item img:hover {
+      transform: scale(1.03);
+    }
+    
+    .screenshot-caption {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    
     /* CTA Section */
     .cta-section {
       padding: 6rem 2rem;
@@ -711,13 +723,7 @@
 <body>
   <header>
     <a href="/" class="logo">
-      <div class="logo-icon">
-        <div class="horizon">
-          <div class="sky"></div>
-          <div class="ground"></div>
-          <div class="sun"></div>
-        </div>
-      </div>
+      <img src="/apple-touch-icon.png" alt="TiltSync" class="logo-icon-img">
       <span class="logo-text">TILTSYNC</span>
     </a>
     <a href="#features" class="nav-link">Features</a>
@@ -725,13 +731,13 @@
 
   <section class="hero">
     <div class="hero-content">
-      <div class="status-badge">AVAILABLE FOR IOS</div>
+      <div class="status-badge">NOW IN BETA</div>
       <h1>Align like a <span class="highlight">pro</span></h1>
       <p class="tagline">The easiest way to align solar panels. Perfect for DIYers and beginners — no experience required.</p>
       <div class="cta-group">
-        <a href="#" class="btn btn-primary">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-          App Store
+        <a href="https://testflight.apple.com/join/SdQQEtrg" class="btn btn-primary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+          Join TestFlight Beta
         </a>
         <a href="#modes" class="btn btn-secondary">How it works</a>
       </div>
@@ -870,13 +876,41 @@
     </div>
   </section>
 
+  <section class="screenshots" id="screenshots">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-label">SCREENSHOTS</div>
+        <h2 class="section-title">See it in action</h2>
+      </div>
+      
+      <div class="screenshots-grid">
+        <div class="screenshot-item">
+          <img src="/web-screenshot-01.png" alt="TiltSync main dashboard in dark mode showing compass and tilt alignment" loading="lazy">
+          <p class="screenshot-caption">Combined dashboard</p>
+        </div>
+        <div class="screenshot-item">
+          <img src="/web-screenshot-02.png" alt="TiltSync bubble level tilt alignment screen in light mode" loading="lazy">
+          <p class="screenshot-caption">Bubble level</p>
+        </div>
+        <div class="screenshot-item">
+          <img src="/web-screenshot-03.png" alt="TiltSync main dashboard in light mode showing aligned state" loading="lazy">
+          <p class="screenshot-caption">Light mode</p>
+        </div>
+        <div class="screenshot-item">
+          <img src="/web-screenshot-04.png" alt="TiltSync compass mode showing directional alignment" loading="lazy">
+          <p class="screenshot-caption">Compass mode</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="cta-section">
     <div class="container">
       <h2>Stop guessing. Start generating.</h2>
-      <p>Download TiltSync and align your solar panels like a pro.</p>
-      <a href="#" class="btn btn-primary">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-        Download on App Store
+      <p>Join the beta and be the first to try TiltSync.</p>
+      <a href="https://testflight.apple.com/join/SdQQEtrg" class="btn btn-primary">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+        Join TestFlight Beta
       </a>
     </div>
   </section>
@@ -884,8 +918,8 @@
   <footer>
     <div class="footer-links">
       <a href="mailto:cameo-kayak.5j@icloud.com?subject=TiltSync%20Support">Support</a>
-      <a href="/privacy">Privacy Policy</a>
-      <a href="/terms">Terms of Service</a>
+      <a href="/privacy.html">Privacy Policy</a>
+      <a href="/terms.html">Terms of Service</a>
     </div>
     <p class="copyright">© 2026 TiltSync. Made by <a href="http://ifnull.me/" style="color: var(--amber); text-decoration: none;">ifnull</a>.</p>
   </footer>

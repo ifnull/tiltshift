@@ -123,6 +123,54 @@ TiltSync uses your location solely to calculate optimal panel angles based on yo
 
 ---
 
+## App Review Notes
+
+*Copy/paste the following into the "Notes" field when submitting for App Store review:*
+
+```
+Thank you for reviewing TiltSync!
+
+WHAT THE APP DOES:
+TiltSync helps users align solar panels for optimal energy production. It uses device sensors (accelerometer, magnetometer, GPS) to calculate and display the ideal panel angle and direction based on the user's location.
+
+HOW TO TEST:
+
+1. LOCATION PERMISSION
+   - On first launch, the app requests location access
+   - This is required to calculate optimal angles based on latitude
+   - Grant "While Using" permission to proceed
+
+2. MOTION PERMISSION  
+   - The app uses accelerometer and magnetometer sensors
+   - These are accessed via expo-sensors and do not require explicit permission prompts on iOS
+
+3. TESTING THE MAIN FEATURES
+   - Hold the device flat (screen facing up) to simulate placing it on a panel
+   - Tilt the device to see the bubble level / tilt indicator respond
+   - Rotate the device to see the compass respond
+   - The app will show "ALIGNED" when both tilt and direction match the calculated targets
+
+4. TESTING THE THREE MODES
+   - Year-Round: Shows a fixed optimal angle based on latitude
+   - Seasonal: Adjusts the target based on current season
+   - Daily: Updates every 60 seconds based on real-time sun position
+
+5. THEME TOGGLE
+   - Tap the theme icon in the header to cycle between Dark, Light, and Auto modes
+
+NO LOGIN REQUIRED:
+The app works immediately without any account creation or sign-in.
+
+NO NETWORK REQUIRED:
+After initial download, the app works completely offline. GPS location comes from the device, not network services.
+
+CONTACT:
+If you have any questions during review, please contact:
+cameo-kayak.5j@icloud.com
+```
+
+---
+
 ## App Preview Video Script (15-30 seconds)
 
 **Scene 1 (0-5s):**
