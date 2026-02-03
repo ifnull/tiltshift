@@ -139,13 +139,14 @@
       <li><strong>Magnetometer</strong> — to determine compass heading</li>
       <li><strong>GPS/Location</strong> — to calculate optimal panel angles based on your latitude</li>
     </ul>
-    <p>This data is:</p>
+    <p>By default, this data is:</p>
     <ul>
       <li>Processed entirely on your device</li>
       <li>Never transmitted to any external server</li>
       <li>Cached locally (for up to 24 hours) to enable faster app startup</li>
       <li>Never shared with third parties</li>
     </ul>
+    <p><strong>Exception:</strong> If you enable the optional "PVWatts Live" feature, limited location data is shared with NREL as described below.</p>
     
     <h2>No Account Required</h2>
     <p>TiltSync does not require you to create an account, sign in, or provide any personal information to use the app.</p>
@@ -157,12 +158,46 @@
     <p>TiltSync stores the following data locally on your device:</p>
     <ul>
       <li>Your theme preference (dark/light/auto)</li>
+      <li>Your selected calculation algorithm</li>
+      <li>PVWatts Live enabled/disabled setting (disabled by default)</li>
       <li>Cached GPS location (expires after 24 hours)</li>
+      <li>Cached PVWatts API results, if enabled (expires after 24 hours)</li>
     </ul>
     <p>This data never leaves your device and can be cleared by uninstalling the app.</p>
     
-    <h2>Third-Party Services</h2>
-    <p>TiltSync does not integrate with any third-party services that collect user data.</p>
+    <h2>Third-Party Services: PVWatts Live (Optional)</h2>
+    <p>TiltSync includes an optional feature called <strong>"PVWatts Live"</strong> that connects to the National Renewable Energy Laboratory (NREL) PVWatts API to calculate industry-standard optimal tilt angles. This feature is:</p>
+    <ul>
+      <li><strong>Disabled by default</strong> — you must explicitly enable it in Settings</li>
+      <li><strong>Opt-in only</strong> — TiltSync never sends location data unless you enable this feature</li>
+    </ul>
+    
+    <h3>What data is sent?</h3>
+    <p>When PVWatts Live is enabled and you request a calculation, TiltSync sends:</p>
+    <ul>
+      <li><strong>Latitude and longitude</strong> — rounded to 2 decimal places (~1.1 km / 0.7 miles precision)</li>
+      <li><strong>No other data</strong> — no device identifiers, no personal information, no usage data</li>
+    </ul>
+    <p>This reduced precision means the API receives your approximate area, not your exact address. For example, coordinates 40.7128, -74.0060 (New York City) would be sent as 40.71, -74.01.</p>
+    
+    <h3>How is this data used?</h3>
+    <p>NREL uses your approximate location to:</p>
+    <ul>
+      <li>Look up historical solar irradiance data for your geographic region</li>
+      <li>Calculate the optimal panel tilt angle that would maximize annual energy production</li>
+      <li>Return an estimated optimal tilt angle to the app</li>
+    </ul>
+    <p>The calculation is performed by testing multiple tilt angles against NREL's solar database and returning the angle with the highest simulated energy output for your region.</p>
+    
+    <h3>Who is NREL?</h3>
+    <p>The <a href="https://www.nrel.gov/" target="_blank" rel="noopener">National Renewable Energy Laboratory (NREL)</a> is a U.S. Department of Energy national laboratory. Their PVWatts calculator is the industry-standard tool used by solar professionals worldwide. You can review <a href="https://developer.nrel.gov/docs/solar/pvwatts/" target="_blank" rel="noopener">NREL's API documentation</a> and their <a href="https://www.nrel.gov/security.html" target="_blank" rel="noopener">privacy and security policies</a>.</p>
+    
+    <h3>Data retention</h3>
+    <ul>
+      <li>TiltSync caches PVWatts results locally on your device for 24 hours to minimize API calls</li>
+      <li>TiltSync does not store any record of API requests</li>
+      <li>NREL's data retention policies apply to requests made to their servers — please refer to their privacy policy</li>
+    </ul>
     
     <h2>Children's Privacy</h2>
     <p>TiltSync does not knowingly collect any information from children. The app is rated 4+ and contains no objectionable content.</p>

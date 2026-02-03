@@ -280,7 +280,32 @@
       <div class="faq-item">
         <div class="faq-question">Does the app work without internet?</div>
         <div class="faq-answer">
-          <p>Yes! TiltSync works completely offline. GPS location is obtained from your device (not a network lookup), and all calculations happen on-device. The only network access needed is the initial app download.</p>
+          <p>Yes! TiltSync works completely offline by default. GPS location is obtained from your device (not a network lookup), and all calculations happen on-device.</p>
+          <p style="margin-top: 0.75rem;"><strong>Exception:</strong> If you enable the optional "PVWatts Live" feature in Settings, the app will make network requests to NREL's API for industry-standard calculations. This feature is disabled by default.</p>
+        </div>
+      </div>
+      
+      <div class="faq-item">
+        <div class="faq-question">How do formulas and modes work together?</div>
+        <div class="faq-answer">
+          <p>TiltSync has three modes and six calculation formulas. Here's how they interact:</p>
+          <p style="margin-top: 0.75rem;"><strong>Year-Round mode:</strong> Your selected formula is used directly to calculate the optimal fixed tilt angle for maximum annual energy production.</p>
+          <p style="margin-top: 0.75rem;"><strong>Seasonal mode:</strong> Your formula provides a base angle, then TiltSync applies a ±15° seasonal adjustment. In summer, tilt is reduced to capture higher sun angles. In winter, tilt is increased to capture lower sun angles.</p>
+          <p style="margin-top: 0.75rem;"><strong>Daily mode:</strong> The formula is <em>not used</em>. Instead, TiltSync calculates the optimal angle based on the sun's current position in the sky (90° minus solar altitude). This updates every minute throughout the day.</p>
+          <p style="margin-top: 0.75rem;"><em>Tip: In the formula picker, you'll see all formulas show the same value in Daily mode — that's the current sun-based angle.</em></p>
+        </div>
+      </div>
+      
+      <div class="faq-item">
+        <div class="faq-question">What is PVWatts Live?</div>
+        <div class="faq-answer">
+          <p><strong>PVWatts Live</strong> is an optional feature that connects to the National Renewable Energy Laboratory (NREL) PVWatts API — the same tool used by solar professionals worldwide.</p>
+          <p style="margin-top: 0.75rem;"><strong>How it works:</strong><br>
+          • When enabled, TiltSync sends your approximate location (latitude/longitude rounded to ~1km precision) to NREL<br>
+          • NREL calculates the optimal tilt using real solar irradiance data for your region<br>
+          • The result is cached locally for 24 hours to minimize network requests</p>
+          <p style="margin-top: 0.75rem;"><strong>Privacy:</strong> This feature is opt-in and disabled by default. Your exact location is never sent — coordinates are rounded to 2 decimal places (~1.1 km precision). No other data is transmitted.</p>
+          <p style="margin-top: 0.75rem;">Enable it in <strong>Settings → PVWatts Live API</strong>.</p>
         </div>
       </div>
       
@@ -356,6 +381,17 @@
           <li>Restart your device</li>
           <li>Ensure you're running the latest version</li>
           <li>Try reinstalling the app</li>
+        </ul>
+      </div>
+      
+      <div class="troubleshooting-item">
+        <h3>PVWatts Live not working</h3>
+        <p>If you've enabled PVWatts Live but it's not returning results:</p>
+        <ul>
+          <li>Check that you have an active internet connection</li>
+          <li>The NREL API may be temporarily unavailable — the app will automatically fall back to local calculations</li>
+          <li>Results are cached for 24 hours; if you recently moved, wait for the cache to refresh or reinstall the app</li>
+          <li>Ensure the feature is enabled in Settings → PVWatts Live API</li>
         </ul>
       </div>
     </div>

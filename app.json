@@ -2,7 +2,7 @@
   "expo": {
     "name": "TiltSync",
     "slug": "tiltsync",
-    "version": "1.0.0",
+    "version": "1.1.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -15,8 +15,11 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.altmake.TiltSync",
-      "buildNumber": "3",
+      "buildNumber": "11",
+      "appleTeamId": "S27QQ5M9D5",
       "infoPlist": {
+        "CFBundleDisplayName": "TiltSync",
+        "LSApplicationCategoryType": "public.app-category.utilities",
         "NSLocationWhenInUseUsageDescription": "TiltSync needs your location to calculate the optimal panel angle for your latitude.",
         "NSMotionUsageDescription": "TiltSync uses motion sensors to measure your panel's current tilt angle.",
         "ITSAppUsesNonExemptEncryption": false
@@ -28,17 +31,27 @@
         "backgroundColor": "#1a5490"
       },
       "package": "com.altmake.tiltsync",
+      "versionCode": 11,
       "permissions": [
-        "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION",
-        "android.permission.ACCESS_COARSE_LOCATION",
-        "android.permission.ACCESS_FINE_LOCATION"
+        "android.permission.ACCESS_COARSE_LOCATION"
       ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
+      "./plugins/withIphoneOnly.js",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "extraPodfileProperties": {
+              "IPHONEOS_DEPLOYMENT_TARGET": "15.1"
+            }
+          }
+        }
+      ],
       [
         "expo-location",
         {

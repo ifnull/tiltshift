@@ -84,9 +84,10 @@ export function useLocation(): LocationState & { refresh: () => Promise<void> } 
         return;
       }
 
-      // Get current position with high accuracy
+      // Get current position with low accuracy (coarse location)
+      // Low accuracy is sufficient for latitude-based solar calculations
       const position = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.High,
+        accuracy: Location.Accuracy.Low,
       });
 
       const locationData: LocationData = {

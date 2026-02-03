@@ -8,17 +8,17 @@
   
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://tiltsync.altmake.com/">
+  <meta property="og:url" content="https://tiltsync.com/">
   <meta property="og:title" content="TiltSync — Solar Panel Alignment Tool">
   <meta property="og:description" content="Align like a pro. The easiest way to align solar panels — perfect for DIYers and beginners. No experience required.">
-  <meta property="og:image" content="https://tiltsync.altmake.com/social.png">
+  <meta property="og:image" content="https://tiltsync.com/social.png">
   
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:url" content="https://tiltsync.altmake.com/">
+  <meta name="twitter:url" content="https://tiltsync.com/">
   <meta name="twitter:title" content="TiltSync — Solar Panel Alignment Tool">
   <meta name="twitter:description" content="Align like a pro. The easiest way to align solar panels — perfect for DIYers and beginners. No experience required.">
-  <meta name="twitter:image" content="https://tiltsync.altmake.com/social.png">
+  <meta name="twitter:image" content="https://tiltsync.com/social.png">
   
   <!-- Favicon -->
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
@@ -120,6 +120,11 @@
       font-size: 1.1rem;
       letter-spacing: 2px;
       color: var(--amber);
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 0.75rem;
     }
     
     .nav-link {
@@ -589,20 +594,238 @@
       margin-top: 1.5rem;
     }
     
-    /* Screenshots Section */
-    .screenshots {
+    .mode-note {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-top: 0.75rem;
+    }
+    
+    .mode-note a {
+      color: var(--amber);
+      text-decoration: none;
+    }
+    
+    .mode-note a:hover {
+      text-decoration: underline;
+    }
+    
+    /* Algorithms Section */
+    .algorithms {
       padding: 6rem 2rem;
       background: var(--panel-light);
     }
     
-    .screenshots-grid {
+    .section-subtitle {
+      color: var(--text-dim);
+      max-width: 600px;
+      margin: 1rem auto 0;
+      font-size: 1.05rem;
+    }
+    
+    .algorithms-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 1.5rem;
       margin-top: 3rem;
     }
     
-    @media (max-width: 900px) {
+    .algorithm-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s;
+    }
+    
+    .algorithm-card:hover {
+      border-color: var(--amber);
+      transform: translateY(-2px);
+    }
+    
+    .algorithm-card-live {
+      border-color: var(--green);
+      background: linear-gradient(135deg, var(--panel) 0%, rgba(0, 255, 102, 0.03) 100%);
+    }
+    
+    .algorithm-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .algorithm-name {
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+    
+    .algorithm-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      background: var(--panel-light);
+      color: var(--text-dim);
+      letter-spacing: 1px;
+    }
+    
+    .algorithm-badge-live {
+      background: rgba(0, 255, 102, 0.15);
+      color: var(--green);
+    }
+    
+    .algorithm-formula {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--amber);
+      background: var(--panel-light);
+      padding: 0.75rem 1rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+      overflow-x: auto;
+    }
+    
+    .algorithm-desc {
+      color: var(--text-dim);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+    
+    .algorithm-note {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      background: rgba(0, 255, 102, 0.05);
+      padding: 0.75rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+      border-left: 2px solid var(--green);
+    }
+    
+    .algorithm-example {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border);
+    }
+    
+    .algorithm-source {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-top: 0.75rem;
+      text-decoration: none;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    
+    a.algorithm-source:hover {
+      color: var(--amber);
+    }
+    
+    .example-label {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+    }
+    
+    .example-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--green);
+      font-weight: 500;
+    }
+    
+    .algorithms-note {
+      margin-top: 2.5rem;
+      padding: 1.5rem;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      text-align: center;
+    }
+    
+    .algorithms-note p {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    
+    .algorithms-note strong {
+      color: var(--text);
+    }
+    
+    .algorithms-modes-info {
+      margin-top: 3rem;
+      padding: 2rem;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+    
+    .algorithms-modes-info h3 {
+      text-align: center;
+      font-size: 1.25rem;
+      margin-bottom: 1.5rem;
+      color: var(--text);
+    }
+    
+    .mode-info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .mode-info-card {
+      text-align: center;
+      padding: 1.25rem;
+      background: var(--panel-light);
+      border-radius: 8px;
+    }
+    
+    .mode-info-icon {
+      font-size: 1.5rem;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    
+    .mode-info-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--amber);
+      letter-spacing: 1px;
+      display: block;
+      margin-bottom: 0.75rem;
+    }
+    
+    .mode-info-card p {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      line-height: 1.5;
+      margin: 0;
+    }
+    
+    /* Screenshots Section */
+    .screenshots {
+      padding: 6rem 2rem;
+      background: var(--panel);
+    }
+    
+    .screenshots-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+    
+    @media (max-width: 1100px) {
+      .screenshots-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    
+    @media (max-width: 700px) {
       .screenshots-grid {
         grid-template-columns: repeat(2, 1fr);
       }
@@ -726,20 +949,26 @@
       <img src="/apple-touch-icon.png" alt="TiltSync" class="logo-icon-img">
       <span class="logo-text">TILTSYNC</span>
     </a>
-    <a href="#features" class="nav-link">Features</a>
+    <nav class="nav-links">
+      <a href="#features" class="nav-link">Features</a>
+      <a href="#algorithms" class="nav-link">Formulas</a>
+    </nav>
   </header>
 
   <section class="hero">
     <div class="hero-content">
-      <div class="status-badge">NOW IN BETA</div>
+      <div class="status-badge">NOW ON iOS & ANDROID</div>
       <h1>Align like a <span class="highlight">pro</span></h1>
       <p class="tagline">The easiest way to align solar panels. Perfect for DIYers and beginners — no experience required.</p>
       <div class="cta-group">
-        <a href="https://testflight.apple.com/join/SdQQEtrg" class="btn btn-primary">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-          Join TestFlight Beta
+        <a href="https://apps.apple.com/us/app/tiltsync/id6758175977" class="btn btn-primary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+          App Store
         </a>
-        <a href="#modes" class="btn btn-secondary">How it works</a>
+        <a href="https://play.google.com/store/apps/details?id=com.altmake.tiltsync&hl=en_US" class="btn btn-primary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 0 1-.61-.92V2.734a1 1 0 0 1 .609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.198l2.807 1.626a1 1 0 0 1 0 1.73l-2.808 1.626L15.206 12l2.492-2.491zM5.864 2.658L16.8 8.99l-2.302 2.302-8.634-8.634z"/></svg>
+          Google Play
+        </a>
       </div>
     </div>
     
@@ -840,6 +1069,18 @@
           <h3 class="feature-title">Works offline</h3>
           <p class="feature-desc">All calculations happen on-device. No account required, no data collected. Just open and align.</p>
         </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3 class="feature-title">PVWatts Live (optional)</h3>
+          <p class="feature-desc">Enable industry-standard calculations from NREL's PVWatts API. Uses your approximate location (~1km precision) to query real solar data.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">📐</div>
+          <h3 class="feature-title">6 calculation formulas</h3>
+          <p class="feature-desc">Choose from Simple Latitude, Energy Optimized, Landau, Jacobson, PVWatts estimate, or live NREL data. Compare tilt angles side-by-side.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -856,21 +1097,148 @@
           <div class="mode-name">YEAR-ROUND</div>
           <h3 class="mode-title">Set & forget</h3>
           <p class="mode-desc">Best fixed angle for maximum annual energy production. Ideal for permanent rooftop installations.</p>
-          <div class="mode-formula">tilt = latitude</div>
+          <div class="mode-formula">tilt = f(latitude)</div>
+          <p class="mode-note">Choose from <a href="#algorithms">6 different formulas</a></p>
         </div>
         
         <div class="mode-card">
           <div class="mode-name">SEASONAL</div>
           <h3 class="mode-title">Quarterly tune-up</h3>
           <p class="mode-desc">Optimized angles for summer and winter. For adjustable mounts that can squeeze extra efficiency.</p>
-          <div class="mode-formula">tilt = latitude ± 15°</div>
+          <div class="mode-formula">tilt = base ± 15°</div>
+          <p class="mode-note">Base angle uses your selected formula</p>
         </div>
         
         <div class="mode-card">
           <div class="mode-name">DAILY</div>
           <h3 class="mode-title">Real-time tracking</h3>
           <p class="mode-desc">Updates every minute based on current sun position. Perfect for portable panels, camping, and RV setups.</p>
-          <div class="mode-formula">tilt = 90° − altitude</div>
+          <div class="mode-formula">tilt = 90° − solar altitude</div>
+          <p class="mode-note">Sun position calculated from date, time & location</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="algorithms" id="algorithms">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-label">CALCULATION FORMULAS</div>
+        <h2 class="section-title">The science behind the angles</h2>
+        <p class="section-subtitle">TiltSync offers six different methods to calculate optimal tilt. Compare them side-by-side and choose what works best for you.</p>
+      </div>
+      
+      <div class="algorithms-grid">
+        <div class="algorithm-card">
+          <div class="algorithm-header">
+            <span class="algorithm-name">Simple Latitude</span>
+            <span class="algorithm-badge">Classic</span>
+          </div>
+          <div class="algorithm-formula">tilt = |latitude|</div>
+          <p class="algorithm-desc">The traditional rule of thumb: set your panel tilt equal to your latitude. Simple, widely taught, and provides a solid baseline for year-round production.</p>
+          <div class="algorithm-example">
+            <span class="example-label">Example at 40°N:</span>
+            <span class="example-value">40.0°</span>
+          </div>
+          <div class="algorithm-source">Classic rule of thumb</div>
+        </div>
+        
+        <div class="algorithm-card">
+          <div class="algorithm-header">
+            <span class="algorithm-name">Energy Optimized</span>
+            <span class="algorithm-badge">Practical</span>
+          </div>
+          <div class="algorithm-formula">tilt = |latitude| × 0.9</div>
+          <p class="algorithm-desc">A slight reduction from the simple rule. Accounts for diffuse radiation (scattered sunlight) which is captured better at lower angles. Often produces more total annual energy.</p>
+          <div class="algorithm-example">
+            <span class="example-label">Example at 40°N:</span>
+            <span class="example-value">36.0°</span>
+          </div>
+          <div class="algorithm-source">Common industry adjustment</div>
+        </div>
+        
+        <div class="algorithm-card">
+          <div class="algorithm-header">
+            <span class="algorithm-name">Landau Formula</span>
+            <span class="algorithm-badge">Research</span>
+          </div>
+          <div class="algorithm-formula">tilt = |latitude| × 0.76 + 3.1°</div>
+          <p class="algorithm-desc">Empirically derived formula from solar energy research by Charles R. Landau. Optimized for maximum annual energy yield based on iterative calculations of over 12,000 data points per configuration.</p>
+          <div class="algorithm-example">
+            <span class="example-label">Example at 40°N:</span>
+            <span class="example-value">33.5°</span>
+          </div>
+          <a href="https://www.solarpaneltilt.com/" target="_blank" rel="noopener" class="algorithm-source">Source: solarpaneltilt.com</a>
+        </div>
+        
+        <div class="algorithm-card">
+          <div class="algorithm-header">
+            <span class="algorithm-name">Jacobson Polynomial</span>
+            <span class="algorithm-badge">Academic</span>
+          </div>
+          <div class="algorithm-formula">tilt = 1.38 + 1.20×L − 0.014×L² + 0.00008×L³</div>
+          <p class="algorithm-desc">Third-order polynomial curve fit derived by Stanford researchers Jacobson & Jadhav from PVWatts simulation data. Better matches optimal tilt above 40° latitude than linear formulas.</p>
+          <div class="algorithm-example">
+            <span class="example-label">Example at 40°N:</span>
+            <span class="example-value">36.8°</span>
+          </div>
+          <a href="https://web.stanford.edu/group/efmh/jacobson/Articles/I/TiltAngles.pdf" target="_blank" rel="noopener" class="algorithm-source">Source: Stanford (Solar Energy, 2018)</a>
+        </div>
+        
+        <div class="algorithm-card">
+          <div class="algorithm-header">
+            <span class="algorithm-name">PVWatts Estimate</span>
+            <span class="algorithm-badge">Industry</span>
+          </div>
+          <div class="algorithm-formula">tilt ≈ |latitude| × 0.87</div>
+          <p class="algorithm-desc">Local approximation of the NREL PVWatts model used by solar professionals. A good balance between simplicity and real-world optimization. Works offline.</p>
+          <div class="algorithm-example">
+            <span class="example-label">Example at 40°N:</span>
+            <span class="example-value">34.8°</span>
+          </div>
+          <a href="https://pvwatts.nrel.gov/" target="_blank" rel="noopener" class="algorithm-source">Based on: NREL PVWatts</a>
+        </div>
+        
+        <div class="algorithm-card algorithm-card-live">
+          <div class="algorithm-header">
+            <span class="algorithm-name">PVWatts Live</span>
+            <span class="algorithm-badge algorithm-badge-live">⚡ API</span>
+          </div>
+          <div class="algorithm-formula">NREL PVWatts API</div>
+          <p class="algorithm-desc">Real-time calculation from the National Renewable Energy Laboratory. Uses actual solar irradiance data for your location. The industry standard used by professional installers.</p>
+          <div class="algorithm-note">
+            <strong>How it works:</strong> TiltSync tests multiple angles against NREL's solar database and returns the one with highest simulated annual output. Requires internet; uses ~1km location precision for privacy.
+          </div>
+          <div class="algorithm-example">
+            <span class="example-label">Example at 40°N:</span>
+            <span class="example-value">Varies by location</span>
+          </div>
+          <a href="https://developer.nrel.gov/docs/solar/pvwatts/" target="_blank" rel="noopener" class="algorithm-source">Source: NREL PVWatts API</a>
+        </div>
+      </div>
+      
+      <div class="algorithms-note">
+        <p><strong>Which should I use?</strong> For most fixed installations, any formula will get you within a few degrees of optimal. The difference in annual energy production between formulas is typically 1-3%. If you want the most accurate result for your specific location, enable PVWatts Live in Settings.</p>
+      </div>
+      
+      <div class="algorithms-modes-info">
+        <h3>How Formulas Interact with Modes</h3>
+        <div class="mode-info-grid">
+          <div class="mode-info-card">
+            <span class="mode-info-icon">📐</span>
+            <span class="mode-info-name">Year-Round</span>
+            <p>Formula is used directly. Your selected calculation determines the fixed optimal angle for maximum annual production.</p>
+          </div>
+          <div class="mode-info-card">
+            <span class="mode-info-icon">🌡️</span>
+            <span class="mode-info-name">Seasonal</span>
+            <p>Formula provides the base angle, then ±15° is applied based on season. Summer tilts lower, winter tilts higher.</p>
+          </div>
+          <div class="mode-info-card">
+            <span class="mode-info-icon">☀️</span>
+            <span class="mode-info-name">Daily</span>
+            <p>Formula is not used. Tilt is calculated from the sun's current position (90° minus solar altitude), updating every minute.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -900,6 +1268,10 @@
           <img src="/web-screenshot-04.png" alt="TiltSync compass mode showing directional alignment" loading="lazy">
           <p class="screenshot-caption">Compass mode</p>
         </div>
+        <div class="screenshot-item">
+          <img src="/web-screenshot-05.png" alt="TiltSync formula selection showing all calculation methods" loading="lazy">
+          <p class="screenshot-caption">Formula picker</p>
+        </div>
       </div>
     </div>
   </section>
@@ -907,17 +1279,23 @@
   <section class="cta-section">
     <div class="container">
       <h2>Stop guessing. Start generating.</h2>
-      <p>Join the beta and be the first to try TiltSync.</p>
-      <a href="https://testflight.apple.com/join/SdQQEtrg" class="btn btn-primary">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-        Join TestFlight Beta
-      </a>
+      <p>Download TiltSync free on iOS and Android.</p>
+      <div class="cta-group">
+        <a href="https://apps.apple.com/us/app/tiltsync/id6758175977" class="btn btn-primary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+          App Store
+        </a>
+        <a href="https://play.google.com/store/apps/details?id=com.altmake.tiltsync&hl=en_US" class="btn btn-primary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 0 1-.61-.92V2.734a1 1 0 0 1 .609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.198l2.807 1.626a1 1 0 0 1 0 1.73l-2.808 1.626L15.206 12l2.492-2.491zM5.864 2.658L16.8 8.99l-2.302 2.302-8.634-8.634z"/></svg>
+          Google Play
+        </a>
+      </div>
     </div>
   </section>
 
   <footer>
     <div class="footer-links">
-      <a href="mailto:cameo-kayak.5j@icloud.com?subject=TiltSync%20Support">Support</a>
+      <a href="/support.html">Support</a>
       <a href="/privacy.html">Privacy Policy</a>
       <a href="/terms.html">Terms of Service</a>
     </div>

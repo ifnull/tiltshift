@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useTheme } from '../context/ThemeContext';
 import {
-  useMagnetometer,
+  useTiltCompensatedCompass,
   useLocation,
   useOptimalAngle,
   useHapticFeedback,
@@ -25,10 +25,10 @@ interface CompassScreenProps {
 export function CompassScreen({ onBack }: CompassScreenProps) {
   const { colors } = useTheme();
 
-  const { heading: currentHeading, rawHeading, isAvailable, error: magError } = useMagnetometer();
+  const { heading: currentHeading, rawHeading, isAvailable, error: sensorError } = useTiltCompensatedCompass();
   const { location, isLoading: locationLoading, isRefreshing, isCached, error: locationError, refresh } = useLocation();
-  // Mode doesn't affect azimuth, so we just use 'year-round'
-  const { optimalAngles, isCalculating } = useOptimalAngle(location, 'year-round');
+  // Mode and algorithm don't affect azimuth, so we just use defaults
+  const { optimalAngles, isCalculating } = useOptimalAngle(location, 'year-round', 'simple');
 
   // For compass only mode, the user stands behind the panel
   // pointing the phone in the direction the panel should face
@@ -78,7 +78,7 @@ export function CompassScreen({ onBack }: CompassScreenProps) {
           ) : !isAvailable ? (
             <View style={styles.sensorError}>
               <Text style={[styles.sensorErrorText, { color: colors.red }]}>
-                {magError || 'Compass not available'}
+                {sensorError || 'Compass not available'}
               </Text>
               <Text style={[styles.sensorErrorHint, { color: colors.textDim }]}>
                 Make sure to grant compass permissions

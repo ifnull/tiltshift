@@ -1,6 +1,18 @@
 // Alignment modes
 export type AlignmentMode = 'year-round' | 'seasonal' | 'daily';
 
+// Calculation algorithms for optimal tilt
+export type CalculationAlgorithm = 'simple' | 'optimized' | 'landau' | 'jacobson' | 'pvwatts' | 'pvwatts-live' | 'pvwatts-winter';
+
+// Algorithm metadata for UI
+export interface AlgorithmInfo {
+  id: CalculationAlgorithm;
+  name: string;
+  shortName: string;
+  description: string;
+  formula: string;
+}
+
 // Season for seasonal mode
 export type Season = 'spring' | 'summer' | 'fall' | 'winter';
 

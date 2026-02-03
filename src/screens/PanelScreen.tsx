@@ -1,21 +1,23 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import type { AlignmentMode } from '../types';
+import type { AlignmentMode, CalculationAlgorithm } from '../types';
 import { useTheme } from '../context/ThemeContext';
 import {
-  useAccelerometer,
-  useMagnetometer,
+  useTiltCompensatedCompass,
   useLocation,
   useOptimalAngle,
   useHapticFeedback,
+  usePVWattsLive,
 } from '../hooks';
 import { LocationDisplay } from '../components';
 import { DualAlignmentView } from '../components/DualAlignmentView';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { CompassHelp } from '../components/CompassHelp';
 import { getAlignmentResult } from '../utils/alignmentStatus';
+import { ALGORITHMS, calculateAllAlgorithms, getCurrentSeason, getHemisphere, getDailyTilt } from '../utils/solarCalculations';
+import { SEASONAL_ADJUSTMENT } from '../utils/constants';
 
 const FONT = {
   regular: 'RobotoMono_400Regular',
@@ -27,20 +29,118 @@ const FONT = {
 interface PanelScreenProps {
   onSwitchToTilt: () => void;
   onSwitchToCompass: () => void;
+  onSwitchToSettings: () => void;
 }
 
-export function PanelScreen({ onSwitchToTilt, onSwitchToCompass }: PanelScreenProps) {
+export function PanelScreen({ onSwitchToTilt, onSwitchToCompass, onSwitchToSettings }: PanelScreenProps) {
   const [mode, setMode] = useState<AlignmentMode>('year-round');
-  const { colors } = useTheme();
+  const [showAlgorithmPicker, setShowAlgorithmPicker] = useState(false);
+  const { 
+    colors, 
+    algorithm, 
+    setAlgorithm, 
+    pvwattsLiveEnabled,
+    useManualLocation,
+    manualLatitude,
+    manualLongitude,
+  } = useTheme();
 
-  const { tilt: currentTilt, isAvailable: accelAvailable, error: accelError } = useAccelerometer();
-  const { heading: currentHeading, rawHeading, isAvailable: magAvailable, error: magError } = useMagnetometer();
-  const { location, isLoading: locationLoading, isRefreshing, isCached, error: locationError, refresh } = useLocation();
-  const { optimalAngles, isCalculating } = useOptimalAngle(location, mode);
+  // Combined tilt-compensated compass - accurate at any device angle
+  const { 
+    heading: currentHeading, 
+    rawHeading, 
+    tilt: currentTilt, 
+    isAvailable: sensorsAvailable, 
+    error: sensorError 
+  } = useTiltCompensatedCompass();
+  const { location: gpsLocation, isLoading: locationLoading, isRefreshing, isCached, error: locationError, refresh } = useLocation();
+  
+  // Determine effective location (manual overrides GPS when enabled and valid)
+  const location = React.useMemo(() => {
+    if (useManualLocation && manualLatitude !== null && manualLongitude !== null) {
+      return {
+        latitude: manualLatitude,
+        longitude: manualLongitude,
+        altitude: null,
+        accuracy: 0,
+        timestamp: Date.now(),
+      };
+    }
+    return gpsLocation;
+  }, [useManualLocation, manualLatitude, manualLongitude, gpsLocation]);
+  
+  const isUsingManualLocation = useManualLocation && manualLatitude !== null && manualLongitude !== null;
+  
+  const { optimalAngles, isCalculating, isLive } = useOptimalAngle(location, mode, algorithm);
+  
+  // Fetch PVWatts Live data in background when enabled
+  const { tilt: pvwattsLiveBaseTilt, isLoading: pvwattsLoading } = usePVWattsLive(location, pvwattsLiveEnabled, false);
+  
+  // Fetch Winter Priority data in background when enabled
+  const { tilt: winterPriorityBaseTilt, isLoading: winterPriorityLoading } = usePVWattsLive(location, pvwattsLiveEnabled, true);
+  
+  // Adjust PVWatts Live tilt based on current mode (same logic as other algorithms)
+  const pvwattsLiveTilt = React.useMemo(() => {
+    if (pvwattsLiveBaseTilt === null || !location) return null;
+    
+    if (mode === 'daily') {
+      // Daily mode uses sun position, not the base algorithm tilt
+      return getDailyTilt(location.latitude);
+    }
+    
+    if (mode === 'seasonal') {
+      const hemisphere = getHemisphere(location.latitude);
+      const season = getCurrentSeason(new Date(), hemisphere);
+      
+      switch (season) {
+        case 'summer':
+          return Math.max(0, pvwattsLiveBaseTilt - SEASONAL_ADJUSTMENT);
+        case 'winter':
+          return Math.min(90, pvwattsLiveBaseTilt + SEASONAL_ADJUSTMENT);
+        default:
+          return pvwattsLiveBaseTilt;
+      }
+    }
+    
+    // Year-round mode: use raw tilt
+    return pvwattsLiveBaseTilt;
+  }, [pvwattsLiveBaseTilt, location, mode]);
+
+  // Adjust Winter Priority tilt based on current mode
+  // Note: Winter Priority is already optimized for worst-month, so seasonal adjustment
+  // may not be ideal - but we show it for consistency with other algorithms
+  const winterPriorityTilt = React.useMemo(() => {
+    if (winterPriorityBaseTilt === null || !location) return null;
+    
+    if (mode === 'daily') {
+      // Daily mode uses sun position, not the base algorithm tilt
+      return getDailyTilt(location.latitude);
+    }
+    
+    if (mode === 'seasonal') {
+      const hemisphere = getHemisphere(location.latitude);
+      const season = getCurrentSeason(new Date(), hemisphere);
+      
+      switch (season) {
+        case 'summer':
+          return Math.max(0, winterPriorityBaseTilt - SEASONAL_ADJUSTMENT);
+        case 'winter':
+          return Math.min(90, winterPriorityBaseTilt + SEASONAL_ADJUSTMENT);
+        default:
+          return winterPriorityBaseTilt;
+      }
+    }
+    
+    // Year-round mode: use raw tilt (this is the primary use case for Winter Priority)
+    return winterPriorityBaseTilt;
+  }, [winterPriorityBaseTilt, location, mode]);
 
   const hasTarget = optimalAngles !== null;
   const targetTilt = optimalAngles?.tilt ?? 0;
   const targetAzimuth = optimalAngles?.azimuth ?? 0;
+  
+  // Calculate tilts for all algorithms (for picker display) based on current mode
+  const allAlgorithmTilts = location ? calculateAllAlgorithms(location.latitude, mode) : null;
   
   const alignmentResult = hasTarget
     ? getAlignmentResult(currentTilt, targetTilt, currentHeading, targetAzimuth)
@@ -58,12 +158,10 @@ export function PanelScreen({ onSwitchToTilt, onSwitchToCompass }: PanelScreenPr
     : 10;
 
   useHapticFeedback({
-    enabled: accelAvailable && magAvailable && hasTarget,
+    enabled: sensorsAvailable && hasTarget,
     deviation: combinedDeviation,
   });
 
-  const sensorsAvailable = accelAvailable && magAvailable;
-  const sensorError = accelError || magError;
   const isLoadingTarget = locationLoading || isCalculating || !hasTarget;
 
   const modes: { key: AlignmentMode; label: string }[] = [
@@ -81,9 +179,17 @@ export function PanelScreen({ onSwitchToTilt, onSwitchToCompass }: PanelScreenPr
         >
           {/* Header */}
           <View style={[styles.header, { borderBottomColor: colors.border }]}>
-            <CompassHelp />
+            <TouchableOpacity
+              style={[styles.settingsButton, { backgroundColor: colors.panelLight, borderColor: colors.border }]}
+              onPress={onSwitchToSettings}
+            >
+              <Text style={[styles.settingsButtonText, { color: colors.amber }]}>⚙</Text>
+            </TouchableOpacity>
             <Text style={[styles.title, { color: colors.amber }]}>TILTSYNC</Text>
-            <ThemeToggle />
+            <View style={styles.headerRight}>
+              <CompassHelp />
+              <ThemeToggle />
+            </View>
           </View>
 
           {/* Period Selector */}
@@ -156,13 +262,137 @@ export function PanelScreen({ onSwitchToTilt, onSwitchToCompass }: PanelScreenPr
           <View style={styles.locationPanel}>
             <LocationDisplay
               location={location}
-              isLoading={locationLoading}
-              isRefreshing={isRefreshing}
+              isLoading={locationLoading && !isUsingManualLocation}
+              isRefreshing={isRefreshing && !isUsingManualLocation}
               isCached={isCached}
-              error={locationError}
-              onRefresh={refresh}
+              isManual={isUsingManualLocation}
+              error={isUsingManualLocation ? null : locationError}
+              onRefresh={isUsingManualLocation ? undefined : refresh}
             />
           </View>
+
+          {/* Algorithm Selector */}
+          <View style={styles.algorithmSection}>
+            <Text style={[styles.algorithmLabel, { color: colors.textDim }]}>FORMULA</Text>
+            <TouchableOpacity
+              style={[styles.algorithmDropdown, { backgroundColor: colors.panelLight, borderColor: colors.border }]}
+              onPress={() => setShowAlgorithmPicker(true)}
+            >
+              <Text style={[styles.algorithmDropdownText, { color: isLive ? colors.green : colors.text }]}>
+                {ALGORITHMS.find(a => a.id === algorithm)?.name ?? 'Select Formula'}
+              </Text>
+              <Text style={[styles.algorithmDropdownArrow, { color: colors.textDim }]}>▼</Text>
+            </TouchableOpacity>
+            <Text style={[styles.algorithmDescription, { color: isLive ? colors.green : colors.textDim }]}>
+              {isLive ? '⚡ Live data from NREL PVWatts API' : ALGORITHMS.find(a => a.id === algorithm)?.description}
+            </Text>
+          </View>
+
+          {/* Algorithm Picker Modal */}
+          <Modal
+            visible={showAlgorithmPicker}
+            transparent
+            animationType="fade"
+            onRequestClose={() => setShowAlgorithmPicker(false)}
+          >
+            <TouchableOpacity 
+              style={styles.modalOverlay}
+              activeOpacity={1}
+              onPress={() => setShowAlgorithmPicker(false)}
+            >
+              <View style={[styles.modalContent, { backgroundColor: colors.panel, borderColor: colors.border }]}>
+                <Text style={[styles.modalTitle, { color: colors.text }]}>Select Formula</Text>
+                
+                {/* Mode info note */}
+                <View style={[styles.modalInfoNote, { backgroundColor: colors.panelLight, borderBottomColor: colors.border }]}>
+                  <Text style={[styles.modalInfoNoteTitle, { color: colors.text }]}>
+                    {mode === 'daily' ? '📍 Daily Mode Active' : mode === 'seasonal' ? '🌡️ Seasonal Mode Active' : '📐 Year-Round Mode'}
+                  </Text>
+                  <Text style={[styles.modalInfoNoteText, { color: colors.textDim }]}>
+                    {mode === 'daily' 
+                      ? 'Daily mode tracks the sun\'s position in real-time. All formulas show the same angle based on current sun altitude.'
+                      : mode === 'seasonal'
+                      ? 'Seasonal mode adjusts the base formula ±15° for summer/winter. Values shown reflect the current season.'
+                      : 'Year-round mode uses the selected formula directly for optimal annual energy production.'
+                    }
+                  </Text>
+                </View>
+                
+                {ALGORITHMS.map((algo) => {
+                  // Check if this is a live API algorithm
+                  const isPvwattsLive = algo.id === 'pvwatts-live';
+                  const isWinterPriority = algo.id === 'pvwatts-winter';
+                  const isLiveApiAlgorithm = isPvwattsLive || isWinterPriority;
+                  
+                  // Get the calculated tilt for this algorithm
+                  const algoTilt = isLiveApiAlgorithm
+                    ? null 
+                    : allAlgorithmTilts?.[algo.id as keyof typeof allAlgorithmTilts];
+                  
+                  // Live API algorithms are disabled when PVWatts Live is not enabled
+                  const isDisabled = isLiveApiAlgorithm && !pvwattsLiveEnabled;
+                  
+                  // Get the live tilt value for API algorithms
+                  const liveTilt = isPvwattsLive ? pvwattsLiveTilt : isWinterPriority ? winterPriorityTilt : null;
+                  const isLoadingLive = isPvwattsLive ? pvwattsLoading : isWinterPriority ? winterPriorityLoading : false;
+                  
+                  return (
+                    <TouchableOpacity
+                      key={algo.id}
+                      style={[
+                        styles.modalOption,
+                        { borderBottomColor: colors.border },
+                        algorithm === algo.id && { backgroundColor: colors.panelLight },
+                        isDisabled && styles.modalOptionDisabled
+                      ]}
+                      onPress={() => {
+                        if (!isDisabled) {
+                          setAlgorithm(algo.id);
+                          setShowAlgorithmPicker(false);
+                        }
+                      }}
+                      activeOpacity={isDisabled ? 1 : 0.7}
+                    >
+                      <View style={styles.modalOptionHeader}>
+                        <Text style={[
+                          styles.modalOptionName,
+                          { color: colors.text },
+                          algorithm === algo.id && { color: colors.green },
+                          isDisabled && { color: colors.textDim }
+                        ]}>
+                          {algo.name}
+                        </Text>
+                        <View style={styles.modalOptionRight}>
+                          {algoTilt !== null && algoTilt !== undefined && (
+                            <Text style={[styles.modalOptionTilt, { color: colors.amber }]}>
+                              {algoTilt.toFixed(1)}°
+                            </Text>
+                          )}
+                          {isLiveApiAlgorithm && pvwattsLiveEnabled && (
+                            <Text style={[styles.modalOptionTilt, { color: colors.amber }]}>
+                              {isLoadingLive ? '...' : liveTilt !== null ? `${liveTilt.toFixed(1)}°` : 'Live'}
+                            </Text>
+                          )}
+                          {algorithm === algo.id && (
+                            <Text style={[styles.modalCheckmark, { color: colors.green }]}>✓</Text>
+                          )}
+                        </View>
+                      </View>
+                      <Text style={[styles.modalOptionFormula, { color: colors.textDim }]}>
+                        {isDisabled ? 'Enable in Settings (⚙) to use live API data' : algo.formula}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+                <TouchableOpacity
+                  style={[styles.modalCloseButton, { backgroundColor: colors.panelLight }]}
+                  onPress={() => setShowAlgorithmPicker(false)}
+                >
+                  <Text style={[styles.modalCloseText, { color: colors.text }]}>Cancel</Text>
+                </TouchableOpacity>
+              </View>
+            </TouchableOpacity>
+          </Modal>
 
           {/* Instructions */}
           <View style={[styles.instructionsPanel, { backgroundColor: colors.panelLight, borderColor: colors.border }]}>
@@ -199,10 +429,26 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderBottomWidth: 1,
   },
+  settingsButton: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+  },
+  settingsButtonText: {
+    fontSize: 16,
+  },
   title: {
     fontSize: 18,
     letterSpacing: 2,
     fontFamily: FONT.bold,
+  },
+  headerRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
   modePanel: {
     flexDirection: 'row',
@@ -310,5 +556,122 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 20,
     fontFamily: FONT.regular,
+  },
+  algorithmSection: {
+    marginTop: 16,
+    marginHorizontal: 20,
+  },
+  algorithmLabel: {
+    fontSize: 11,
+    letterSpacing: 2,
+    fontFamily: FONT.medium,
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  algorithmDropdown: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    borderWidth: 1,
+  },
+  algorithmDropdownText: {
+    fontSize: 14,
+    fontFamily: FONT.regular,
+  },
+  algorithmDropdownArrow: {
+    fontSize: 12,
+  },
+  algorithmDescription: {
+    fontSize: 10,
+    marginTop: 8,
+    textAlign: 'center',
+    fontFamily: FONT.regular,
+    fontStyle: 'italic',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  modalContent: {
+    width: '100%',
+    maxWidth: 340,
+    borderRadius: 12,
+    borderWidth: 1,
+    overflow: 'hidden',
+  },
+  modalTitle: {
+    fontSize: 16,
+    fontFamily: FONT.bold,
+    textAlign: 'center',
+    paddingVertical: 16,
+    letterSpacing: 1,
+  },
+  modalOption: {
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    borderBottomWidth: 1,
+  },
+  modalOptionDisabled: {
+    opacity: 0.5,
+  },
+  modalOptionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  modalOptionName: {
+    fontSize: 14,
+    fontFamily: FONT.medium,
+    flex: 1,
+  },
+  modalOptionRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  modalOptionTilt: {
+    fontSize: 14,
+    fontFamily: FONT.display,
+    minWidth: 48,
+    textAlign: 'right',
+  },
+  modalCheckmark: {
+    fontSize: 16,
+    fontFamily: FONT.bold,
+  },
+  modalOptionFormula: {
+    fontSize: 11,
+    fontFamily: FONT.regular,
+    marginTop: 4,
+  },
+  modalInfoNote: {
+    padding: 12,
+    borderBottomWidth: 1,
+    marginBottom: 4,
+  },
+  modalInfoNoteTitle: {
+    fontSize: 12,
+    fontFamily: FONT.medium,
+    marginBottom: 4,
+  },
+  modalInfoNoteText: {
+    fontSize: 11,
+    fontFamily: FONT.regular,
+    lineHeight: 16,
+  },
+  modalCloseButton: {
+    paddingVertical: 14,
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  modalCloseText: {
+    fontSize: 14,
+    fontFamily: FONT.medium,
   },
 });

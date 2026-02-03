@@ -24,7 +24,7 @@ website/
 
 This is a static site with no build step. Simply upload all HTML files to your hosting provider.
 
-**Domain:** `tiltsync.altmake.com`
+**Domain:** `tiltsync.com`
 
 ### Hosting options:
 - **Vercel**: Drop the folder or connect via Git
@@ -91,8 +91,8 @@ python3 -m http.server 8000
 OG and Twitter meta tags are configured in `index.html`. Update these if you change the domain:
 
 ```html
-<meta property="og:url" content="https://tiltsync.altmake.com/">
-<meta property="og:image" content="https://tiltsync.altmake.com/og-image.png">
+<meta property="og:url" content="https://tiltsync.com/">
+<meta property="og:image" content="https://tiltsync.com/og-image.png">
 ```
 
 ## Notes

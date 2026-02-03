@@ -32,11 +32,11 @@ interface AlignmentScreenProps {
 
 export function AlignmentScreen({ onBack }: AlignmentScreenProps) {
   const [mode, setMode] = useState<AlignmentMode>('year-round');
-  const { colors } = useTheme();
+  const { colors, algorithm } = useTheme();
 
   const { tilt: currentAngle, isAvailable, error: accelError } = useAccelerometer();
   const { location, isLoading: locationLoading, isRefreshing, isCached, error: locationError, refresh } = useLocation();
-  const { optimalAngles, isCalculating } = useOptimalAngle(location, mode);
+  const { optimalAngles, isCalculating } = useOptimalAngle(location, mode, algorithm);
 
   const hasTarget = optimalAngles !== null;
   const targetAngle = optimalAngles?.tilt ?? 0;

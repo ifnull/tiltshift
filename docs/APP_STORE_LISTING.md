@@ -113,13 +113,13 @@ TiltSync uses your location solely to calculate optimal panel angles based on yo
 ---
 
 ## Support URL
-`https://tiltsync.altmake.com/support`
+`https://tiltsync.com/support`
 
 ## Support Email
 `cameo-kayak.5j@icloud.com`
 
 ## Marketing URL
-`https://tiltsync.altmake.com`
+`https://tiltsync.com`
 
 ---
 

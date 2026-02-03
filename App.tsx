@@ -9,8 +9,9 @@ import { ThemeProvider, useTheme } from './src/context/ThemeContext';
 import { AlignmentScreen } from './src/screens/AlignmentScreen';
 import { CompassScreen } from './src/screens/CompassScreen';
 import { PanelScreen } from './src/screens/PanelScreen';
+import { SettingsScreen } from './src/screens/SettingsScreen';
 
-type Screen = 'panel' | 'tilt' | 'compass';
+type Screen = 'panel' | 'tilt' | 'compass' | 'settings';
 
 function AppContent() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('panel');
@@ -25,6 +26,7 @@ function AppContent() {
         <PanelScreen
           onSwitchToTilt={() => setCurrentScreen('tilt')}
           onSwitchToCompass={() => setCurrentScreen('compass')}
+          onSwitchToSettings={() => setCurrentScreen('settings')}
         />
       )}
       {currentScreen === 'tilt' && (
@@ -32,6 +34,9 @@ function AppContent() {
       )}
       {currentScreen === 'compass' && (
         <CompassScreen onBack={goToPanel} />
+      )}
+      {currentScreen === 'settings' && (
+        <SettingsScreen onBack={goToPanel} />
       )}
     </>
   );

@@ -30,6 +30,7 @@ interface LocationDisplayProps {
   isLoading: boolean;
   isRefreshing?: boolean;
   isCached?: boolean;
+  isManual?: boolean;
   error: string | null;
   onRefresh?: () => void;
 }
@@ -39,6 +40,7 @@ export function LocationDisplay({
   isLoading, 
   isRefreshing = false,
   isCached = false,
+  isManual = false,
   error,
   onRefresh,
 }: LocationDisplayProps) {
@@ -91,31 +93,40 @@ export function LocationDisplay({
     return `${Math.abs(value).toFixed(4)}° ${dir}`;
   };
 
+  const coordColor = isManual ? colors.amber : colors.green;
+  const ledColor = isManual ? colors.amber : (isRefreshing ? colors.amber : colors.green);
+
   return (
     <View style={[styles.container, { backgroundColor: colors.panelLight, borderColor: colors.border }]}>
       {/* Row 1: Coordinates */}
       <View style={styles.coordsRow}>
-        <View style={[styles.statusLed, { backgroundColor: isRefreshing ? colors.amber : colors.green }]} />
-        <Text style={[styles.coordValue, { color: colors.green }]}>{formatCoord(location.latitude, true)}</Text>
+        <View style={[styles.statusLed, { backgroundColor: ledColor }]} />
+        <Text style={[styles.coordValue, { color: coordColor }]}>{formatCoord(location.latitude, true)}</Text>
         <Text style={[styles.coordSeparator, { color: colors.textDim }]}>•</Text>
-        <Text style={[styles.coordValue, { color: colors.green }]}>{formatCoord(location.longitude, false)}</Text>
-        {location.altitude !== null && (
+        <Text style={[styles.coordValue, { color: coordColor }]}>{formatCoord(location.longitude, false)}</Text>
+        {location.altitude !== null && !isManual && (
           <>
             <Text style={[styles.coordSeparator, { color: colors.textDim }]}>•</Text>
-            <Text style={[styles.coordValue, { color: colors.green }]}>{Math.round(location.altitude)}m</Text>
+            <Text style={[styles.coordValue, { color: coordColor }]}>{Math.round(location.altitude)}m</Text>
           </>
         )}
       </View>
 
-      {/* Row 2: Updated time and refresh */}
+      {/* Row 2: Updated time and refresh (or Manual indicator) */}
       <View style={styles.footerRow}>
-        {relativeTime && (
-          <Text style={[styles.timeText, { color: colors.textDim }]}>Updated {relativeTime}</Text>
-        )}
-        {onRefresh && (
-          <TouchableOpacity onPress={handleRefresh} style={styles.refreshButton}>
-            <Text style={[styles.refreshText, { color: colors.textDim }]}>Refresh</Text>
-          </TouchableOpacity>
+        {isManual ? (
+          <Text style={[styles.manualText, { color: colors.amber }]}>📍 Manual Location</Text>
+        ) : (
+          <>
+            {relativeTime && (
+              <Text style={[styles.timeText, { color: colors.textDim }]}>Updated {relativeTime}</Text>
+            )}
+            {onRefresh && (
+              <TouchableOpacity onPress={handleRefresh} style={styles.refreshButton}>
+                <Text style={[styles.refreshText, { color: colors.textDim }]}>Refresh</Text>
+              </TouchableOpacity>
+            )}
+          </>
         )}
       </View>
     </View>
@@ -183,5 +194,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: FONT.regular,
     textAlign: 'center',
+  },
+  manualText: {
+    fontSize: 11,
+    fontFamily: FONT.medium,
   },
 });
