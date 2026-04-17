@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import type { AlignmentMode, LocationData, OptimalAngles, CalculationAlgorithm } from '../types';
-import { calculateOptimalAngles, getHemisphere, getOptimalAzimuth } from '../utils/solarCalculations';
+import type { AlignmentMode, LocationData, OptimalAngles, CalculationAlgorithm, TouSettings } from '../types';
+import { calculateOptimalAngles, getHemisphere, getOptimalAzimuth, getOptimalAzimuthForTou } from '../utils/solarCalculations';
 import { getOptimalTiltFromPVWatts, getWinterPriorityTiltFromPVWatts } from '../services/pvwattsApi';
 
 interface OptimalAngleState {
@@ -10,14 +10,14 @@ interface OptimalAngleState {
 }
 
 /**
- * Hook to calculate optimal angles based on location, mode, and algorithm
- * Recalculates when location, mode, algorithm, or time changes (for daily mode)
- * Supports async PVWatts Live API calls
+ * Hook to calculate optimal angles based on location, mode, algorithm, and optional TOU rates.
+ * When TOU is enabled, azimuth is chosen to maximize value (production × rate) over the day.
  */
 export function useOptimalAngle(
   location: LocationData | null,
   mode: AlignmentMode,
-  algorithm: CalculationAlgorithm = 'simple'
+  algorithm: CalculationAlgorithm = 'simple',
+  touSettings?: TouSettings | null
 ): OptimalAngleState {
   const [state, setState] = useState<OptimalAngleState>({
     optimalAngles: null,
@@ -45,13 +45,15 @@ export function useOptimalAngle(
       
       apiCall
         .then((result) => {
-          // Only update if this is still the current request
           if (currentRequestId !== requestIdRef.current) return;
-          
+          const azimuth =
+            touSettings?.enabled && touSettings.blocks.length > 0
+              ? getOptimalAzimuthForTou(location.latitude, result.tilt, touSettings.blocks, new Date())
+              : getOptimalAzimuth(location.latitude);
           setState({
             optimalAngles: {
               tilt: result.tilt,
-              azimuth: getOptimalAzimuth(location.latitude),
+              azimuth,
               hemisphere: getHemisphere(location.latitude),
             },
             isCalculating: false,
@@ -64,7 +66,7 @@ export function useOptimalAngle(
           // Fallback to local calculation on error
           // For winter priority, fallback to latitude + 15°
           const fallbackAlgo = algorithm === 'pvwatts-winter' ? 'simple' : 'pvwatts';
-          const angles = calculateOptimalAngles(location, mode, new Date(), fallbackAlgo);
+          const angles = calculateOptimalAngles(location, mode, new Date(), fallbackAlgo, touSettings);
           if (algorithm === 'pvwatts-winter') {
             // Adjust for winter priority fallback
             angles.tilt = Math.min(90, Math.abs(location.latitude) + 15);
@@ -75,20 +77,9 @@ export function useOptimalAngle(
       return;
     }
 
-    // Synchronous calculation for other algorithms
-    const angles = calculateOptimalAngles(location, mode, new Date(), algorithm);
+    const angles = calculateOptimalAngles(location, mode, new Date(), algorithm, touSettings);
     setState({ optimalAngles: angles, isCalculating: false, isLive: false });
-
-    // For daily mode, recalculate every minute
-    if (mode === 'daily') {
-      const interval = setInterval(() => {
-        const updatedAngles = calculateOptimalAngles(location, mode, new Date(), algorithm);
-        setState({ optimalAngles: updatedAngles, isCalculating: false, isLive: false });
-      }, 60000); // Update every minute
-
-      return () => clearInterval(interval);
-    }
-  }, [location, mode, algorithm]);
+  }, [location, mode, algorithm, touSettings]);
 
   return state;
 }

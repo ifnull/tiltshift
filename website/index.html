@@ -864,6 +864,128 @@
       font-family: 'JetBrains Mono', monospace;
     }
     
+    /* Android Beta Section */
+    .android-beta {
+      padding: 5rem 2rem;
+      background: linear-gradient(135deg, var(--panel) 0%, rgba(0, 255, 102, 0.03) 100%);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .beta-card {
+      max-width: 700px;
+      margin: 0 auto;
+      background: var(--panel-light);
+      border: 2px solid var(--green);
+      border-radius: 16px;
+      padding: 3rem;
+      text-align: center;
+    }
+    
+    .beta-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--green);
+      background: rgba(0, 255, 102, 0.1);
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      border: 1px solid rgba(0, 255, 102, 0.3);
+      margin-bottom: 1.5rem;
+      letter-spacing: 1px;
+    }
+    
+    .beta-card h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    
+    .beta-card .beta-desc {
+      color: var(--text-dim);
+      font-size: 1.05rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.7;
+    }
+    
+    .beta-progress {
+      background: var(--panel);
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    
+    .beta-progress-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      margin-bottom: 0.75rem;
+    }
+    
+    .beta-progress-bar {
+      height: 8px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+    }
+    
+    .beta-progress-fill {
+      height: 100%;
+      background: var(--green);
+      border-radius: 4px;
+      transition: width 0.3s;
+    }
+    
+    .beta-progress-count {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.25rem;
+      color: var(--green);
+      font-weight: 700;
+    }
+    
+    .beta-why {
+      background: var(--panel);
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      text-align: left;
+    }
+    
+    .beta-why-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--amber);
+      letter-spacing: 1px;
+      margin-bottom: 0.75rem;
+    }
+    
+    .beta-why p {
+      color: var(--text-dim);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+    
+    .beta-why a {
+      color: var(--amber);
+      text-decoration: none;
+    }
+    
+    .beta-why a:hover {
+      text-decoration: underline;
+    }
+    
+    .btn-beta {
+      background: var(--green);
+      color: var(--panel);
+    }
+    
+    .btn-beta:hover {
+      background: #00dd55;
+      transform: translateY(-2px);
+    }
+    
     /* CTA Section */
     .cta-section {
       padding: 6rem 2rem;
@@ -914,6 +1036,41 @@
       color: var(--text-dim);
     }
     
+    .footer-partners {
+      margin-bottom: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .footer-partners-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      color: var(--text-dim);
+      margin-bottom: 0.75rem;
+    }
+    
+    .footer-partners-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .suntrace-logo-link {
+      display: inline-block;
+    }
+    
+    .suntrace-logo-link:hover {
+      opacity: 0.85;
+    }
+    
+    .suntrace-logo {
+      height: 2rem;
+      width: auto;
+      border-radius: 6px;
+    }
+    
     /* Responsive */
     @media (max-width: 640px) {
       header {
@@ -952,12 +1109,13 @@
     <nav class="nav-links">
       <a href="#features" class="nav-link">Features</a>
       <a href="#algorithms" class="nav-link">Formulas</a>
+      <a href="/partners.html" class="nav-link">Partners</a>
     </nav>
   </header>
 
   <section class="hero">
     <div class="hero-content">
-      <div class="status-badge">NOW ON iOS & ANDROID</div>
+      <div class="status-badge">NOW ON iOS • ANDROID BETA</div>
       <h1>Align like a <span class="highlight">pro</span></h1>
       <p class="tagline">The easiest way to align solar panels. Perfect for DIYers and beginners — no experience required.</p>
       <div class="cta-group">
@@ -965,9 +1123,9 @@
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
           App Store
         </a>
-        <a href="https://play.google.com/store/apps/details?id=com.altmake.tiltsync&hl=en_US" class="btn btn-primary">
+        <a href="#android-beta" class="btn btn-secondary">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 0 1-.61-.92V2.734a1 1 0 0 1 .609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.198l2.807 1.626a1 1 0 0 1 0 1.73l-2.808 1.626L15.206 12l2.492-2.491zM5.864 2.658L16.8 8.99l-2.302 2.302-8.634-8.634z"/></svg>
-          Google Play
+          Android Beta
         </a>
       </div>
     </div>
@@ -1276,26 +1434,60 @@
     </div>
   </section>
 
+  <section class="android-beta" id="android-beta">
+    <div class="beta-card">
+      <div class="beta-badge">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 0 1-.61-.92V2.734a1 1 0 0 1 .609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.198l2.807 1.626a1 1 0 0 1 0 1.73l-2.808 1.626L15.206 12l2.492-2.491zM5.864 2.658L16.8 8.99l-2.302 2.302-8.634-8.634z"/></svg>
+        ANDROID CLOSED BETA
+      </div>
+      <h2>Help us launch on Google Play</h2>
+      <p class="beta-desc">TiltSync for Android is ready — but we need your help to go live. Google Play requires new apps to have 12 beta testers for 14 days before publishing.</p>
+      
+      <div class="beta-progress">
+        <div class="beta-progress-label">TESTERS NEEDED</div>
+        <div class="beta-progress-bar">
+          <div class="beta-progress-fill" style="width: 25%"></div>
+        </div>
+        <div class="beta-progress-count">3 / 12</div>
+      </div>
+      
+      <div class="beta-why">
+        <div class="beta-why-title">WHY IS THIS REQUIRED?</div>
+        <p>Google Play's <a href="https://support.google.com/googleplay/android-developer/answer/14151465" target="_blank" rel="noopener">new testing policy</a> requires personal developer accounts to run a closed test with at least 12 opted-in testers for 14 consecutive days before publishing to production. This helps ensure app quality on the Play Store.</p>
+      </div>
+      
+      <p class="beta-desc" style="margin-bottom: 1.5rem;">Want early access? Email me and I'll add you to the beta. You'll get TiltSync for Android before anyone else.</p>
+      
+      <a href="mailto:cameo-kayak.5j@icloud.com?subject=TiltSync%20Android%20Beta%20Access&body=Hi!%20I'd%20like%20to%20join%20the%20TiltSync%20Android%20beta.%0A%0AMy%20Google%20Play%20email%20is%3A%20" class="btn btn-beta">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg>
+        Request Beta Access
+      </a>
+    </div>
+  </section>
+
   <section class="cta-section">
     <div class="container">
       <h2>Stop guessing. Start generating.</h2>
-      <p>Download TiltSync free on iOS and Android.</p>
-      <div class="cta-group">
-        <a href="https://apps.apple.com/us/app/tiltsync/id6758175977" class="btn btn-primary">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-          App Store
-        </a>
-        <a href="https://play.google.com/store/apps/details?id=com.altmake.tiltsync&hl=en_US" class="btn btn-primary">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 0 1-.61-.92V2.734a1 1 0 0 1 .609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.198l2.807 1.626a1 1 0 0 1 0 1.73l-2.808 1.626L15.206 12l2.492-2.491zM5.864 2.658L16.8 8.99l-2.302 2.302-8.634-8.634z"/></svg>
-          Google Play
-        </a>
-      </div>
+      <p>Download TiltSync free on the App Store.</p>
+      <a href="https://apps.apple.com/us/app/tiltsync/id6758175977" class="btn btn-primary">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+        Download on App Store
+      </a>
     </div>
   </section>
 
   <footer>
+    <div class="footer-partners">
+      <div class="footer-partners-label">PARTNERS</div>
+      <div class="footer-partners-row">
+        <a href="https://suntrace3d.com/" class="suntrace-logo-link" target="_blank" rel="noopener noreferrer" title="SunTrace3D — 3D solar and shadow analysis">
+          <img src="suntrace3d-footer.png" alt="SunTrace3D" class="suntrace-logo">
+        </a>
+      </div>
+    </div>
     <div class="footer-links">
       <a href="/support.html">Support</a>
+      <a href="/partners.html">Partners</a>
       <a href="/privacy.html">Privacy Policy</a>
       <a href="/terms.html">Terms of Service</a>
     </div>

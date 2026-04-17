@@ -1,4 +1,4 @@
-import type { AlignmentMode, Season, OptimalAngles, LocationData, CalculationAlgorithm, AlgorithmInfo } from '../types';
+import type { AlignmentMode, Season, OptimalAngles, LocationData, CalculationAlgorithm, AlgorithmInfo, TouBlock, TouSettings, SunPosition } from '../types';
 import { SEASONAL_ADJUSTMENT, EARTH_AXIAL_TILT } from './constants';
 
 /**
@@ -157,6 +157,99 @@ export function getSolarAltitude(
 }
 
 /**
+ * Solar azimuth in degrees from north (0 = N, 180 = S), clockwise.
+ */
+export function getSolarAzimuth(
+  latitude: number,
+  declination: number,
+  hourAngle: number,
+  solarAltitude: number
+): number {
+  const latRad = degreesToRadians(latitude);
+  const decRad = degreesToRadians(declination);
+  const hourRad = degreesToRadians(hourAngle);
+  const altRad = degreesToRadians(solarAltitude);
+
+  const cosAz =
+    (Math.sin(altRad) * Math.sin(latRad) - Math.sin(decRad)) /
+    (Math.cos(altRad) * Math.cos(latRad) + 1e-10);
+  const sinAz = (Math.cos(decRad) * Math.sin(hourRad)) / (Math.cos(altRad) + 1e-10);
+
+  let azDeg = radiansToDegrees(Math.atan2(sinAz, cosAz));
+  azDeg = (azDeg + 180) % 360;
+  return azDeg;
+}
+
+/**
+ * Relative irradiance (0–1) on a tilted surface: cos(angle between sun and panel normal).
+ * Panel tilt and azimuth use app convention: tilt from horizontal, azimuth = direction phone top points (0 = N, panel faces S).
+ */
+export function getRelativeIrradiance(
+  solarAltitudeDeg: number,
+  solarAzimuthDeg: number,
+  panelTiltDeg: number,
+  panelAzimuthDeg: number
+): number {
+  const alpha = degreesToRadians(solarAltitudeDeg);
+  const beta = degreesToRadians(panelTiltDeg);
+  const panelFacingDeg = (panelAzimuthDeg + 180) % 360;
+  const gammaDiff = degreesToRadians(solarAzimuthDeg - panelFacingDeg);
+  const cosTheta = Math.cos(alpha) * Math.cos(beta) * Math.cos(gammaDiff) + Math.sin(alpha) * Math.sin(beta);
+  return Math.max(0, cosTheta);
+}
+
+/**
+ * Get $/kWh rate (in cents) for a given hour (0–23) from TOU blocks.
+ */
+export function getRateForHour(hour: number, blocks: TouBlock[]): number {
+  for (const b of blocks) {
+    if (hour >= b.startHour && hour < b.endHour) return b.rateCentsPerKwh;
+  }
+  return 0;
+}
+
+/**
+ * Optimal azimuth to maximize value (production × rate) over the day.
+ * Returns same convention as getOptimalAzimuth: 0 = N (panel S) northern hem, 180 = S (panel N) southern.
+ */
+export function getOptimalAzimuthForTou(
+  latitude: number,
+  tilt: number,
+  blocks: TouBlock[],
+  date: Date = new Date()
+): number {
+  if (blocks.length === 0) return getOptimalAzimuth(latitude);
+
+  const dayOfYear = getDayOfYear(date);
+  const declination = getSolarDeclination(dayOfYear);
+  const baseAzimuth = latitude >= 0 ? 0 : 180;
+  const step = 5;
+  const halfRange = 45;
+  let bestAzimuth = baseAzimuth;
+  let bestValue = -1;
+
+  for (let offset = -halfRange; offset <= halfRange; offset += step) {
+    const panelAz = (baseAzimuth + offset + 360) % 360;
+    let value = 0;
+    for (let hour = 5; hour <= 19; hour += 1) {
+      const hourAngle = getHourAngle(hour + 0.5);
+      const alt = getSolarAltitude(latitude, declination, hourAngle);
+      if (alt <= 0) continue;
+      const sunAz = getSolarAzimuth(latitude, declination, hourAngle, alt);
+      const irrad = getRelativeIrradiance(alt, sunAz, tilt, panelAz);
+      const rate = getRateForHour(hour, blocks);
+      value += irrad * rate;
+    }
+    if (value > bestValue) {
+      bestValue = value;
+      bestAzimuth = panelAz;
+    }
+  }
+
+  return bestAzimuth;
+}
+
+/**
  * Calculate optimal tilt using Simple Latitude rule
  * tilt = latitude
  */
@@ -248,23 +341,21 @@ export function getSeasonalTilt(latitude: number, season: Season, algorithm: Cal
 }
 
 /**
- * Calculate optimal tilt angle for current sun position (daily tracking)
+ * Optimal tilt for a given day (at solar noon).
+ * Uses only the date, not current time, so the same angle is shown all day.
  */
 export function getDailyTilt(
   latitude: number,
   date: Date = new Date()
 ): number {
   const dayOfYear = getDayOfYear(date);
-  const hour = date.getHours() + date.getMinutes() / 60;
+  const solarNoonHour = 12;
 
   const declination = getSolarDeclination(dayOfYear);
-  const hourAngle = getHourAngle(hour);
+  const hourAngle = getHourAngle(solarNoonHour);
   const solarAltitude = getSolarAltitude(latitude, declination, hourAngle);
 
-  // Optimal tilt = 90° - solar altitude (perpendicular to sun rays)
   const optimalTilt = 90 - solarAltitude;
-
-  // Clamp between 0 and 90 degrees
   return Math.max(0, Math.min(90, optimalTilt));
 }
 
@@ -295,13 +386,14 @@ export function getHemisphere(latitude: number): 'northern' | 'southern' {
 }
 
 /**
- * Calculate all optimal angles based on mode, location, and algorithm
+ * Calculate all optimal angles based on mode, location, algorithm, and optional TOU rates.
  */
 export function calculateOptimalAngles(
   location: LocationData,
   mode: AlignmentMode,
   date: Date = new Date(),
-  algorithm: CalculationAlgorithm = 'simple'
+  algorithm: CalculationAlgorithm = 'simple',
+  touSettings?: TouSettings | null
 ): OptimalAngles {
   const { latitude } = location;
   const hemisphere = getHemisphere(latitude);
@@ -314,7 +406,6 @@ export function calculateOptimalAngles(
       tilt = getSeasonalTilt(latitude, season, algorithm);
       break;
     case 'daily':
-      // Daily mode tracks the sun position, so algorithm doesn't apply
       tilt = getDailyTilt(latitude, date);
       break;
     case 'year-round':
@@ -323,9 +414,14 @@ export function calculateOptimalAngles(
       break;
   }
 
+  const azimuth =
+    touSettings?.enabled && touSettings.blocks.length > 0
+      ? getOptimalAzimuthForTou(latitude, tilt, touSettings.blocks, date)
+      : getOptimalAzimuth(latitude);
+
   return {
     tilt,
-    azimuth: getOptimalAzimuth(latitude),
+    azimuth,
     hemisphere,
   };
 }
@@ -374,6 +470,79 @@ export function calculateAllAlgorithms(
     jacobson: getJacobsonTilt(latitude),
     pvwatts: getPVWattsTilt(latitude),
   };
+}
+
+/**
+ * Offset (in hours) to add to a local clock hour to get mean solar time at the
+ * given longitude. Accounts for the device's current timezone (including DST)
+ * and the user's position within that timezone.
+ *
+ * solarHour = clockHour + clockToSolarOffsetHours(longitude, date)
+ */
+export function clockToSolarOffsetHours(longitude: number, date: Date = new Date()): number {
+  const tzOffsetHours = -date.getTimezoneOffset() / 60;
+  return longitude / 15 - tzOffsetHours;
+}
+
+/**
+ * Generate sun positions for each hour of the day (above horizon only).
+ * Uses half-hour steps for a smoother path, but labels on whole hours.
+ *
+ * The returned `hour` values are LOCAL CLOCK HOURS, while altitude/azimuth are
+ * computed from the equivalent solar time derived from the user's longitude.
+ * That way hour labels match the phone's clock and the glyph at `currentHour`
+ * (also a clock hour) lines up with the real sun in the sky.
+ */
+export function getSunPathPositions(
+  latitude: number,
+  longitude: number,
+  date: Date = new Date()
+): SunPosition[] {
+  const dayOfYear = getDayOfYear(date);
+  const declination = getSolarDeclination(dayOfYear);
+  const offset = clockToSolarOffsetHours(longitude, date);
+  const positions: SunPosition[] = [];
+
+  for (let h = 4; h <= 21; h += 0.5) {
+    const solarHour = h + offset;
+    const hourAngle = getHourAngle(solarHour);
+    const altitude = getSolarAltitude(latitude, declination, hourAngle);
+    if (altitude <= 0) continue;
+    const azimuth = getSolarAzimuth(latitude, declination, hourAngle, altitude);
+    positions.push({ hour: h, altitude, azimuth });
+  }
+
+  return positions;
+}
+
+/**
+ * Sample sun positions at the same fixed hour indices as getSunPathPositions,
+ * but include every hour (clamping altitude to ≥ 0 when the sun is below the
+ * horizon). This lets two arcs from different dates be paired by hour index
+ * for building an envelope ribbon between them.
+ *
+ * Like getSunPathPositions, `hour` values are local clock hours.
+ */
+export function getSunPathPositionsFull(
+  latitude: number,
+  longitude: number,
+  date: Date = new Date()
+): SunPosition[] {
+  const dayOfYear = getDayOfYear(date);
+  const declination = getSolarDeclination(dayOfYear);
+  const offset = clockToSolarOffsetHours(longitude, date);
+  const positions: SunPosition[] = [];
+
+  for (let h = 4; h <= 21; h += 0.5) {
+    const solarHour = h + offset;
+    const hourAngle = getHourAngle(solarHour);
+    const rawAltitude = getSolarAltitude(latitude, declination, hourAngle);
+    const altitude = Math.max(0, rawAltitude);
+    const azimuth = getSolarAzimuth(latitude, declination, hourAngle, rawAltitude);
+    positions.push({ hour: h, altitude, azimuth });
+  }
+
+  return positions;
 }
 
 /**

@@ -14,7 +14,3 @@ local.properties
 
 # Bundle artifacts
 *.jsbundle
-
-# Release keystore (keep this secret!)
-app/release.keystore
-*.keystore

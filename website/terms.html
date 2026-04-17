@@ -113,6 +113,48 @@
       font-size: 0.85rem;
       color: var(--text-dim);
     }
+    
+    .footer-partners {
+      margin-bottom: 1.25rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .footer-partners-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      color: var(--text-dim);
+      margin-bottom: 0.75rem;
+    }
+    
+    .suntrace-logo-link {
+      display: inline-block;
+    }
+    
+    .suntrace-logo-link:hover {
+      opacity: 0.85;
+    }
+    
+    .suntrace-logo {
+      height: 2rem;
+      width: auto;
+      border-radius: 6px;
+    }
+    
+    .footer-partners-page {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      margin-top: 0.5rem;
+    }
+    
+    .footer-partners-page a {
+      color: var(--text-dim);
+    }
+    
+    .footer-partners-page a:hover {
+      color: var(--amber);
+    }
   </style>
 </head>
 <body>
@@ -199,6 +241,13 @@
   </main>
 
   <footer>
+    <div class="footer-partners">
+      <div class="footer-partners-label">PARTNERS</div>
+      <a href="https://suntrace3d.com/" class="suntrace-logo-link" target="_blank" rel="noopener noreferrer" title="SunTrace3D">
+        <img src="suntrace3d-footer.png" alt="SunTrace3D" class="suntrace-logo">
+      </a>
+      <div class="footer-partners-page"><a href="/partners.html">Partner program</a></div>
+    </div>
     <a href="/">← Back to TiltSync</a>
   </footer>
 </body>

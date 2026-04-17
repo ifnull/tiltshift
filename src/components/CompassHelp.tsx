@@ -151,7 +151,8 @@ const styles = StyleSheet.create({
   },
   figure8Container: {
     alignItems: 'center',
-    marginVertical: 12,
+    marginTop: 24,
+    marginBottom: 12,
     padding: 16,
     borderRadius: 8,
   },

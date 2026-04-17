@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator, Modal } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator, Modal, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import type { AlignmentMode, CalculationAlgorithm } from '../types';
@@ -27,13 +27,16 @@ const FONT = {
 };
 
 interface PanelScreenProps {
+  mode: AlignmentMode;
+  onModeChange: (mode: AlignmentMode) => void;
   onSwitchToTilt: () => void;
   onSwitchToCompass: () => void;
   onSwitchToSettings: () => void;
+  onSwitchToAR: () => void;
 }
 
-export function PanelScreen({ onSwitchToTilt, onSwitchToCompass, onSwitchToSettings }: PanelScreenProps) {
-  const [mode, setMode] = useState<AlignmentMode>('year-round');
+export function PanelScreen({ mode, onModeChange, onSwitchToTilt, onSwitchToCompass, onSwitchToSettings, onSwitchToAR }: PanelScreenProps) {
+  const setMode = onModeChange;
   const [showAlgorithmPicker, setShowAlgorithmPicker] = useState(false);
   const { 
     colors, 
@@ -43,6 +46,8 @@ export function PanelScreen({ onSwitchToTilt, onSwitchToCompass, onSwitchToSetti
     useManualLocation,
     manualLatitude,
     manualLongitude,
+    compassInverted,
+    touSettings,
   } = useTheme();
 
   // Combined tilt-compensated compass - accurate at any device angle
@@ -71,7 +76,7 @@ export function PanelScreen({ onSwitchToTilt, onSwitchToCompass, onSwitchToSetti
   
   const isUsingManualLocation = useManualLocation && manualLatitude !== null && manualLongitude !== null;
   
-  const { optimalAngles, isCalculating, isLive } = useOptimalAngle(location, mode, algorithm);
+  const { optimalAngles, isCalculating, isLive } = useOptimalAngle(location, mode, algorithm, touSettings);
   
   // Fetch PVWatts Live data in background when enabled
   const { tilt: pvwattsLiveBaseTilt, isLoading: pvwattsLoading } = usePVWattsLive(location, pvwattsLiveEnabled, false);
@@ -237,6 +242,7 @@ export function PanelScreen({ onSwitchToTilt, onSwitchToCompass, onSwitchToSetti
               tiltPercentage={alignmentResult?.tiltPercentage ?? 0}
               azimuthPercentage={alignmentResult?.azimuthPercentage ?? 0}
               overallPercentage={overallPercentage}
+              compassInverted={compassInverted}
             />
           )}
 
@@ -255,6 +261,16 @@ export function PanelScreen({ onSwitchToTilt, onSwitchToCompass, onSwitchToSetti
                 <Text style={styles.controlIcon}>🧭</Text>
                 <Text style={[styles.controlLabel, { color: colors.text }]}>Compass Only</Text>
               </TouchableOpacity>
+
+              {Platform.OS === 'ios' && (
+                <>
+                  <View style={[styles.controlDivider, { backgroundColor: colors.border }]} />
+                  <TouchableOpacity style={styles.controlButton} onPress={() => onSwitchToAR()}>
+                    <Text style={styles.controlIcon}>☀️</Text>
+                    <Text style={[styles.controlLabel, { color: colors.text }]}>AR Sun Path</Text>
+                  </TouchableOpacity>
+                </>
+              )}
             </View>
           </View>
 

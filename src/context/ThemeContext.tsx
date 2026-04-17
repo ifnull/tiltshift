@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useColorScheme } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import type { CalculationAlgorithm } from '../types';
+import type { CalculationAlgorithm, TouBlock, TouSettings } from '../types';
 
 export type ThemePreference = 'auto' | 'light' | 'dark';
 export type ResolvedTheme = 'light' | 'dark';
@@ -95,6 +95,10 @@ interface ThemeContextType {
   manualLatitude: number | null;
   manualLongitude: number | null;
   setManualCoordinates: (lat: number | null, lon: number | null) => void;
+  compassInverted: boolean;
+  setCompassInverted: (inverted: boolean) => void;
+  touSettings: TouSettings;
+  setTouSettings: (settings: TouSettings) => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | null>(null);
@@ -104,6 +108,15 @@ const ALGORITHM_STORAGE_KEY = '@tiltsync_algorithm';
 const PVWATTS_LIVE_STORAGE_KEY = '@tiltsync_pvwatts_live';
 const USE_MANUAL_LOCATION_KEY = '@tiltsync_use_manual_location';
 const MANUAL_COORDINATES_KEY = '@tiltsync_manual_coordinates';
+const COMPASS_INVERTED_KEY = '@tiltsync_compass_inverted';
+const TOU_SETTINGS_KEY = '@tiltsync_tou_settings';
+
+const DEFAULT_TOU_BLOCKS: TouBlock[] = [
+  { startHour: 0, endHour: 12, rateCentsPerKwh: 10 },
+  { startHour: 12, endHour: 18, rateCentsPerKwh: 24 },
+  { startHour: 18, endHour: 24, rateCentsPerKwh: 10 },
+];
+const DEFAULT_TOU: TouSettings = { enabled: false, blocks: DEFAULT_TOU_BLOCKS, sellbackCentsPerKwh: null };
 
 const VALID_ALGORITHMS: CalculationAlgorithm[] = ['simple', 'optimized', 'landau', 'jacobson', 'pvwatts', 'pvwatts-live', 'pvwatts-winter'];
 
@@ -115,6 +128,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const [useManualLocation, setUseManualLocationState] = useState<boolean>(false);
   const [manualLatitude, setManualLatitude] = useState<number | null>(null);
   const [manualLongitude, setManualLongitude] = useState<number | null>(null);
+  const [compassInverted, setCompassInvertedState] = useState<boolean>(false);
+  const [touSettings, setTouSettingsState] = useState<TouSettings>(DEFAULT_TOU);
 
   // Resolve the actual theme based on preference and system setting
   const resolved: ResolvedTheme = 
@@ -159,7 +174,44 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         }
       }
     });
+    AsyncStorage.getItem(COMPASS_INVERTED_KEY).then((saved) => {
+      if (saved === 'true') {
+        setCompassInvertedState(true);
+      }
+    });
+    AsyncStorage.getItem(TOU_SETTINGS_KEY).then((saved) => {
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved) as TouSettings;
+          if (parsed && typeof parsed.enabled === 'boolean' && Array.isArray(parsed.blocks)) {
+            setTouSettingsState({
+              enabled: parsed.enabled,
+              blocks: parsed.blocks.filter(
+                (b): b is TouBlock =>
+                  typeof b?.startHour === 'number' &&
+                  typeof b?.endHour === 'number' &&
+                  typeof b?.rateCentsPerKwh === 'number'
+              ),
+              sellbackCentsPerKwh:
+                typeof parsed.sellbackCentsPerKwh === 'number' ? parsed.sellbackCentsPerKwh : null,
+            });
+          }
+        } catch {
+          // ignore
+        }
+      }
+    });
   }, []);
+
+  const setCompassInverted = (inverted: boolean) => {
+    setCompassInvertedState(inverted);
+    AsyncStorage.setItem(COMPASS_INVERTED_KEY, inverted ? 'true' : 'false');
+  };
+
+  const setTouSettings = (settings: TouSettings) => {
+    setTouSettingsState(settings);
+    AsyncStorage.setItem(TOU_SETTINGS_KEY, JSON.stringify(settings));
+  };
 
   const setPreference = (newPref: ThemePreference) => {
     setPreferenceState(newPref);
@@ -218,6 +270,10 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       manualLatitude,
       manualLongitude,
       setManualCoordinates,
+      compassInverted,
+      setCompassInverted,
+      touSettings,
+      setTouSettings,
     }}>
       {children}
     </ThemeContext.Provider>

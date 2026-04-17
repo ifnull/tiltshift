@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Switch, TextInput
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Constants from 'expo-constants';
 
+import type { TouBlock, TouSettings } from '../types';
 import { useTheme } from '../context/ThemeContext';
 import { useLocation } from '../hooks';
 
@@ -42,6 +43,10 @@ export function SettingsScreen({ onBack }: SettingsScreenProps) {
     manualLatitude,
     manualLongitude,
     setManualCoordinates,
+    compassInverted,
+    setCompassInverted,
+    touSettings,
+    setTouSettings,
   } = useTheme();
   
   const { location: gpsLocation } = useLocation();
@@ -106,6 +111,18 @@ export function SettingsScreen({ onBack }: SettingsScreenProps) {
   };
   
   const hasValidManualLocation = manualLatitude !== null && manualLongitude !== null;
+
+  const updateTouBlock = (index: number, field: keyof TouBlock, value: number) => {
+    const next = [...touSettings.blocks];
+    if (!next[index]) return;
+    next[index] = { ...next[index], [field]: value };
+    setTouSettings({ ...touSettings, blocks: next });
+  };
+
+  const updateSellback = (value: string) => {
+    const n = value === '' ? null : parseFloat(value);
+    setTouSettings({ ...touSettings, sellbackCentsPerKwh: n === null || isNaN(n) ? null : n });
+  };
 
   return (
     <View style={[styles.container, { backgroundColor: colors.panel }]}>
@@ -207,6 +224,117 @@ export function SettingsScreen({ onBack }: SettingsScreenProps) {
                         ? `✓ Using manual location: ${manualLatitude?.toFixed(4)}°, ${manualLongitude?.toFixed(4)}°`
                         : '⚠ Enter valid coordinates to enable manual mode'
                       }
+                    </Text>
+                  </View>
+                </>
+              )}
+            </View>
+          </View>
+
+          {/* Display Section */}
+          <View style={styles.section}>
+            <Text style={[styles.sectionTitle, { color: colors.textDim }]}>DISPLAY</Text>
+            
+            <View style={[styles.settingCard, { backgroundColor: colors.panelLight, borderColor: colors.border }]}>
+              <View style={styles.settingRow}>
+                <View style={styles.settingInfo}>
+                  <Text style={[styles.settingLabel, { color: colors.text }]}>
+                    Invert compass 180°
+                  </Text>
+                  <Text style={[styles.settingDescription, { color: colors.textDim }]}>
+                    Flip the compass so it reads correctly when you're holding the phone toward the sun or have it laid screen-down on the panel.
+                  </Text>
+                </View>
+                <Switch
+                  value={compassInverted}
+                  onValueChange={setCompassInverted}
+                  trackColor={{ false: colors.border, true: colors.green }}
+                  thumbColor={colors.text}
+                />
+              </View>
+            </View>
+          </View>
+
+          {/* Time-of-use Section */}
+          <View style={styles.section}>
+            <Text style={[styles.sectionTitle, { color: colors.textDim }]}>TIME-OF-USE RATES</Text>
+            
+            <View style={[styles.settingCard, { backgroundColor: colors.panelLight, borderColor: colors.border }]}>
+              <View style={styles.settingRow}>
+                <View style={styles.settingInfo}>
+                  <Text style={[styles.settingLabel, { color: colors.text }]}>
+                    Use time-of-use rates
+                  </Text>
+                  <Text style={[styles.settingDescription, { color: colors.textDim }]}>
+                    Recommend E–W panel angle to maximize savings when rates vary by time (e.g. peak afternoon). Enter rates in ¢/kWh.
+                  </Text>
+                </View>
+                <Switch
+                  value={touSettings.enabled}
+                  onValueChange={(enabled) => setTouSettings({ ...touSettings, enabled })}
+                  trackColor={{ false: colors.border, true: colors.green }}
+                  thumbColor={colors.text}
+                />
+              </View>
+              
+              {touSettings.enabled && (
+                <>
+                  <View style={[styles.coordinateInputs, { borderTopColor: colors.border }]}>
+                    {touSettings.blocks.map((block, i) => (
+                      <View key={i} style={[styles.touBlockRow, i > 0 && { borderTopWidth: 1, borderTopColor: colors.border }]}>
+                        <Text style={[styles.touBlockLabel, { color: colors.textDim }]}>Block {i + 1}</Text>
+                        <View style={styles.touBlockInputs}>
+                          <View style={styles.touInputGroup}>
+                            <Text style={[styles.inputLabel, { color: colors.textDim }]}>Start</Text>
+                            <TextInput
+                              style={[styles.input, styles.touInput, { color: colors.text, backgroundColor: colors.panel, borderColor: colors.border }]}
+                              value={String(block.startHour)}
+                              onChangeText={(t) => updateTouBlock(i, 'startHour', Math.max(0, Math.min(23, parseInt(t, 10) || 0)))}
+                              placeholder="0"
+                              placeholderTextColor={colors.textDim}
+                              keyboardType="number-pad"
+                            />
+                          </View>
+                          <View style={styles.touInputGroup}>
+                            <Text style={[styles.inputLabel, { color: colors.textDim }]}>End</Text>
+                            <TextInput
+                              style={[styles.input, styles.touInput, { color: colors.text, backgroundColor: colors.panel, borderColor: colors.border }]}
+                              value={String(block.endHour)}
+                              onChangeText={(t) => updateTouBlock(i, 'endHour', Math.max(1, Math.min(24, parseInt(t, 10) || 24)))}
+                              placeholder="24"
+                              placeholderTextColor={colors.textDim}
+                              keyboardType="number-pad"
+                            />
+                          </View>
+                          <View style={styles.touInputGroup}>
+                            <Text style={[styles.inputLabel, { color: colors.textDim }]}>¢/kWh</Text>
+                            <TextInput
+                              style={[styles.input, styles.touInput, { color: colors.text, backgroundColor: colors.panel, borderColor: colors.border }]}
+                              value={String(block.rateCentsPerKwh)}
+                              onChangeText={(t) => updateTouBlock(i, 'rateCentsPerKwh', Math.max(0, parseFloat(t) || 0))}
+                              placeholder="0"
+                              placeholderTextColor={colors.textDim}
+                              keyboardType="decimal-pad"
+                            />
+                          </View>
+                        </View>
+                      </View>
+                    ))}
+                    <View style={[styles.touBlockRow, { borderTopColor: colors.border }]}>
+                      <Text style={[styles.touBlockLabel, { color: colors.textDim }]}>Sellback (optional)</Text>
+                      <TextInput
+                        style={[styles.input, { color: colors.text, backgroundColor: colors.panel, borderColor: colors.border, flex: 1 }]}
+                        value={touSettings.sellbackCentsPerKwh != null ? String(touSettings.sellbackCentsPerKwh) : ''}
+                        onChangeText={updateSellback}
+                        placeholder="¢/kWh"
+                        placeholderTextColor={colors.textDim}
+                        keyboardType="decimal-pad"
+                      />
+                    </View>
+                  </View>
+                  <View style={[styles.settingNote, { borderTopColor: colors.border }]}>
+                    <Text style={[styles.noteText, { color: colors.textDim }]}>
+                      Hours are 0–24 (e.g. peak 14–18). When enabled, the recommended compass direction tilts toward higher-rate hours (e.g. more west for afternoon peak).
                     </Text>
                   </View>
                 </>
@@ -394,5 +522,26 @@ const styles = StyleSheet.create({
   useGpsButtonText: {
     fontSize: 13,
     fontFamily: FONT.medium,
+  },
+  touBlockRow: {
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    gap: 8,
+  },
+  touBlockLabel: {
+    fontSize: 12,
+    fontFamily: FONT.medium,
+  },
+  touBlockInputs: {
+    flexDirection: 'row',
+    gap: 12,
+    flexWrap: 'wrap',
+  },
+  touInputGroup: {
+    flex: 1,
+    minWidth: 70,
+  },
+  touInput: {
+    minWidth: 56,
   },
 });

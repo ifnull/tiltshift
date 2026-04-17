@@ -1,20 +1,11 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools">
-  <!-- Remove ACTIVITY_RECOGNITION that expo-sensors adds automatically (not needed for accelerometer/magnetometer) -->
-  <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" tools:node="remove"/>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
   <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
   <uses-permission android:name="android.permission.INTERNET"/>
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
   <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
   <uses-permission android:name="android.permission.VIBRATE"/>
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-  <!-- Restrict to phones only (no tablet support) -->
-  <supports-screens
-    android:smallScreens="true"
-    android:normalScreens="true"
-    android:largeScreens="false"
-    android:xlargeScreens="false"
-    android:requiresSmallestWidthDp="320"/>
   <queries>
     <intent>
       <action android:name="android.intent.action.VIEW"/>

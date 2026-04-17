@@ -32,11 +32,27 @@ interface AlignmentScreenProps {
 
 export function AlignmentScreen({ onBack }: AlignmentScreenProps) {
   const [mode, setMode] = useState<AlignmentMode>('year-round');
-  const { colors, algorithm } = useTheme();
+  const { colors, algorithm, useManualLocation, manualLatitude, manualLongitude, touSettings } = useTheme();
 
   const { tilt: currentAngle, isAvailable, error: accelError } = useAccelerometer();
-  const { location, isLoading: locationLoading, isRefreshing, isCached, error: locationError, refresh } = useLocation();
-  const { optimalAngles, isCalculating } = useOptimalAngle(location, mode, algorithm);
+  const { location: gpsLocation, isLoading: locationLoading, isRefreshing, isCached, error: locationError, refresh } = useLocation();
+
+  const location = React.useMemo(() => {
+    if (useManualLocation && manualLatitude !== null && manualLongitude !== null) {
+      return {
+        latitude: manualLatitude,
+        longitude: manualLongitude,
+        altitude: null,
+        accuracy: 0,
+        timestamp: Date.now(),
+      };
+    }
+    return gpsLocation;
+  }, [useManualLocation, manualLatitude, manualLongitude, gpsLocation]);
+
+  const isUsingManualLocation = useManualLocation && manualLatitude !== null && manualLongitude !== null;
+
+  const { optimalAngles, isCalculating } = useOptimalAngle(location, mode, algorithm, touSettings);
 
   const hasTarget = optimalAngles !== null;
   const targetAngle = optimalAngles?.tilt ?? 0;
@@ -115,11 +131,12 @@ export function AlignmentScreen({ onBack }: AlignmentScreenProps) {
           {/* Location Display */}
           <LocationDisplay
             location={location}
-            isLoading={locationLoading}
-            isRefreshing={isRefreshing}
+            isLoading={locationLoading && !isUsingManualLocation}
+            isRefreshing={isRefreshing && !isUsingManualLocation}
             isCached={isCached}
-            error={locationError}
-            onRefresh={refresh}
+            isManual={isUsingManualLocation}
+            error={isUsingManualLocation ? null : locationError}
+            onRefresh={isUsingManualLocation ? undefined : refresh}
           />
 
           {/* Instructions */}

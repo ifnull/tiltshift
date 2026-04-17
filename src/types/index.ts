@@ -64,3 +64,22 @@ export interface StatusColors {
   good: string;
   bad: string;
 }
+
+// Time-of-use rate block (hours in 0-24, rate in cents per kWh)
+export interface TouBlock {
+  startHour: number;
+  endHour: number;
+  rateCentsPerKwh: number;
+}
+
+export interface TouSettings {
+  enabled: boolean;
+  blocks: TouBlock[];
+  sellbackCentsPerKwh: number | null;
+}
+
+export interface SunPosition {
+  hour: number;
+  altitude: number;
+  azimuth: number;
+}

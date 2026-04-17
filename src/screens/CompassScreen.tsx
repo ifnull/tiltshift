@@ -23,12 +23,28 @@ interface CompassScreenProps {
 }
 
 export function CompassScreen({ onBack }: CompassScreenProps) {
-  const { colors } = useTheme();
+  const { colors, compassInverted, useManualLocation, manualLatitude, manualLongitude, touSettings } = useTheme();
 
   const { heading: currentHeading, rawHeading, isAvailable, error: sensorError } = useTiltCompensatedCompass();
-  const { location, isLoading: locationLoading, isRefreshing, isCached, error: locationError, refresh } = useLocation();
+  const { location: gpsLocation, isLoading: locationLoading, isRefreshing, isCached, error: locationError, refresh } = useLocation();
+
+  const location = React.useMemo(() => {
+    if (useManualLocation && manualLatitude !== null && manualLongitude !== null) {
+      return {
+        latitude: manualLatitude,
+        longitude: manualLongitude,
+        altitude: null,
+        accuracy: 0,
+        timestamp: Date.now(),
+      };
+    }
+    return gpsLocation;
+  }, [useManualLocation, manualLatitude, manualLongitude, gpsLocation]);
+
+  const isUsingManualLocation = useManualLocation && manualLatitude !== null && manualLongitude !== null;
+
   // Mode and algorithm don't affect azimuth, so we just use defaults
-  const { optimalAngles, isCalculating } = useOptimalAngle(location, 'year-round', 'simple');
+  const { optimalAngles, isCalculating } = useOptimalAngle(location, 'year-round', 'simple', touSettings);
 
   // For compass only mode, the user stands behind the panel
   // pointing the phone in the direction the panel should face
@@ -92,6 +108,7 @@ export function CompassScreen({ onBack }: CompassScreenProps) {
                 rawHeading={rawHeading}
                 targetHeading={targetHeading}
                 status={status}
+                inverted={compassInverted}
               />
 
               {/* Alignment Indicator */}
@@ -105,11 +122,12 @@ export function CompassScreen({ onBack }: CompassScreenProps) {
           {/* Location Display */}
           <LocationDisplay
             location={location}
-            isLoading={locationLoading}
-            isRefreshing={isRefreshing}
+            isLoading={locationLoading && !isUsingManualLocation}
+            isRefreshing={isRefreshing && !isUsingManualLocation}
             isCached={isCached}
-            error={locationError}
-            onRefresh={refresh}
+            isManual={isUsingManualLocation}
+            error={isUsingManualLocation ? null : locationError}
+            onRefresh={isUsingManualLocation ? undefined : refresh}
           />
 
           {/* Instructions */}

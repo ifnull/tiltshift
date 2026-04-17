@@ -15,6 +15,8 @@ interface DualAlignmentViewProps {
   tiltPercentage: number;
   azimuthPercentage: number;
   overallPercentage: number;
+  /** When true, compass display is rotated 180° (e.g. phone facing sun or screen-down on panel) */
+  compassInverted?: boolean;
 }
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -41,9 +43,11 @@ export function DualAlignmentView({
   tiltPercentage,
   azimuthPercentage,
   overallPercentage,
+  compassInverted = false,
 }: DualAlignmentViewProps) {
   const { colors } = useTheme();
-  const compassAnim = useRef(new Animated.Value(-rawHeading)).current;
+  const compassRotation = compassInverted ? -rawHeading - 180 : -rawHeading;
+  const compassAnim = useRef(new Animated.Value(compassRotation)).current;
   const pitchAnim = useRef(new Animated.Value(0)).current;
 
   const tiltDeviation = currentTilt - targetTilt;
@@ -70,13 +74,14 @@ export function DualAlignmentView({
   const overallColor = getOverallColor();
 
   useEffect(() => {
+    const toValue = compassInverted ? -rawHeading - 180 : -rawHeading;
     Animated.spring(compassAnim, {
-      toValue: -rawHeading,
+      toValue,
       damping: 25,
       stiffness: 120,
       useNativeDriver: true,
     }).start();
-  }, [rawHeading, compassAnim]);
+  }, [rawHeading, compassInverted, compassAnim]);
 
   useEffect(() => {
     const clampedPitch = Math.max(-45, Math.min(45, tiltDeviation));

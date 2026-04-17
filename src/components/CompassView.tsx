@@ -15,6 +15,8 @@ interface CompassViewProps {
   rawHeading: number;
   targetHeading: number;
   status: AlignmentStatus;
+  /** When true, display is rotated 180° for phone facing the sun or laid screen-down on the panel */
+  inverted?: boolean;
 }
 
 const SIZE = Dimensions.get('window').width - 80;
@@ -23,9 +25,10 @@ const COMPASS_SIZE = INNER_SIZE - 40;
 
 const TICK_MARKS = Array.from({ length: 72 }, (_, i) => i * 5);
 
-export function CompassView({ currentHeading, rawHeading, targetHeading, status }: CompassViewProps) {
+export function CompassView({ currentHeading, rawHeading, targetHeading, status, inverted = false }: CompassViewProps) {
   const { colors } = useTheme();
-  const rotation = useRef(new Animated.Value(-rawHeading)).current;
+  const displayRotation = inverted ? -rawHeading - 180 : -rawHeading;
+  const rotation = useRef(new Animated.Value(displayRotation)).current;
   const pulseAnim = useRef(new Animated.Value(1)).current;
 
   const getStatusColor = () => {
@@ -39,13 +42,14 @@ export function CompassView({ currentHeading, rawHeading, targetHeading, status 
   const statusColor = getStatusColor();
 
   useEffect(() => {
+    const toValue = inverted ? -rawHeading - 180 : -rawHeading;
     Animated.spring(rotation, {
-      toValue: -rawHeading,
+      toValue,
       damping: 20,
       stiffness: 120,
       useNativeDriver: true,
     }).start();
-  }, [rawHeading, rotation]);
+  }, [rawHeading, inverted, rotation]);
 
   useEffect(() => {
     if (status === 'best') {

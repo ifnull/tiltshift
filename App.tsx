@@ -7,14 +7,19 @@ import { ShareTechMono_400Regular } from '@expo-google-fonts/share-tech-mono';
 
 import { ThemeProvider, useTheme } from './src/context/ThemeContext';
 import { AlignmentScreen } from './src/screens/AlignmentScreen';
+import { ARScreen } from './src/screens/ARScreen';
 import { CompassScreen } from './src/screens/CompassScreen';
 import { PanelScreen } from './src/screens/PanelScreen';
 import { SettingsScreen } from './src/screens/SettingsScreen';
+import type { AlignmentMode } from './src/types';
 
-type Screen = 'panel' | 'tilt' | 'compass' | 'settings';
+type Screen = 'panel' | 'tilt' | 'compass' | 'settings' | 'ar';
 
 function AppContent() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('panel');
+  // Alignment mode lives here (not in PanelScreen) so it persists across
+  // navigation to AR and other screens.
+  const [alignmentMode, setAlignmentMode] = useState<AlignmentMode>('year-round');
   const { resolved } = useTheme();
 
   const goToPanel = () => setCurrentScreen('panel');
@@ -24,9 +29,12 @@ function AppContent() {
       <StatusBar style={resolved === 'light' ? 'dark' : 'light'} />
       {currentScreen === 'panel' && (
         <PanelScreen
+          mode={alignmentMode}
+          onModeChange={setAlignmentMode}
           onSwitchToTilt={() => setCurrentScreen('tilt')}
           onSwitchToCompass={() => setCurrentScreen('compass')}
           onSwitchToSettings={() => setCurrentScreen('settings')}
+          onSwitchToAR={() => setCurrentScreen('ar')}
         />
       )}
       {currentScreen === 'tilt' && (
@@ -37,6 +45,9 @@ function AppContent() {
       )}
       {currentScreen === 'settings' && (
         <SettingsScreen onBack={goToPanel} />
+      )}
+      {currentScreen === 'ar' && (
+        <ARScreen mode={alignmentMode} onBack={goToPanel} />
       )}
     </>
   );
